@@ -46,30 +46,14 @@ importers:
         specifier: ^5
         version: 5.8.3
 
-  packages/library:
+  apps/www:
     dependencies:
-      class-variance-authority:
-        specifier: ^0.7.0
-        version: 0.7.1
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
-      react:
-        specifier: ^19.0.0
-        version: 19.1.0
-      tailwind-merge:
-        specifier: ^2.0.0
-        version: 2.6.0
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.1.8
-
-  packages/www:
-    dependencies:
-      clsx:
-        specifier: ^2.0.0
-        version: 2.1.1
+      '@basecamp/components':
+        specifier: workspace:*
+        version: link:../../packages/basecamp
+      '@basecamp/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       next:
         specifier: 15.3.5
         version: 15.3.5(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -79,9 +63,6 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.1.0(react@19.1.0)
-      tailwind-merge:
-        specifier: ^2.0.0
-        version: 2.6.0
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
@@ -109,6 +90,41 @@ importers:
         version: 4.1.11
       typescript:
         specifier: ^5
+        version: 5.8.3
+
+  packages/basecamp:
+    dependencies:
+      '@basecamp/ui':
+        specifier: workspace:*
+        version: link:../ui
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.1
+      react:
+        specifier: ^19.0.0
+        version: 19.1.0
+    devDependencies:
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.1.8
+
+  packages/ui:
+    dependencies:
+      clsx:
+        specifier: ^2.0.0
+        version: 2.1.1
+      tailwind-merge:
+        specifier: ^2.0.0
+        version: 2.6.0
+      tailwindcss:
+        specifier: ^4.0.0-alpha.25
+        version: 4.1.11
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.4
+      typescript:
+        specifier: ^5.0.0
         version: 5.8.3
 
 packages:

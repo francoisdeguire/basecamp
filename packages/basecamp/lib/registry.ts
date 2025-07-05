@@ -1,4 +1,4 @@
-import { ComponentMetadata, NavigationSection } from "./metadata"
+import { ComponentMetadata, NavigationSection } from "@basecamp/ui/utils"
 import { buttonMetadata } from "../components/button/metadata"
 import { stackMetadata } from "../primitives/stack/metadata"
 

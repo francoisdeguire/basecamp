@@ -20,7 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@basecamp/*": ["../library/*"]
+      "@basecamp/components/*": ["../../packages/basecamp/components/*"],
+      "@basecamp/primitives/*": ["../../packages/basecamp/primitives/*"],
+      "@basecamp/lib/*": ["../../packages/basecamp/lib/*"],
+      "@basecamp/ui/*": ["../../packages/ui/src/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

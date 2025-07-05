@@ -1,4 +1,4 @@
-import { ComponentMetadata } from "../../lib/metadata"
+import { ComponentMetadata } from "@basecamp/ui/utils"
 
 export const stackMetadata: ComponentMetadata = {
   name: "Stack",

@@ -1,0 +1,46 @@
+@import "tailwindcss";
+@import "@basecamp/ui/styles";
+
+/* App-specific styles that extend the ui package */
+@theme inline {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --color-primary: #3b82f6;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #64748b;
+  --color-secondary-foreground: #ffffff;
+  --color-accent: #f1f5f9;
+  --color-accent-foreground: #0f172a;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #ffffff;
+  --color-input: #e2e8f0;
+  --color-ring: #3b82f6;
+  --color-border: #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+    --color-accent: #1e293b;
+    --color-accent-foreground: #f8fafc;
+    --color-input: #334155;
+    --color-border: #334155;
+  }
+}
+
+/* App-specific component overrides */
+@layer components {
+  /* Custom styles for the documentation site */
+  .doc-content {
+    @apply max-w-none;
+  }
+
+  .doc-sidebar {
+    @apply border-r border-border bg-background;
+  }
+
+  .doc-header {
+    @apply border-b border-border bg-background;
+  }
+}

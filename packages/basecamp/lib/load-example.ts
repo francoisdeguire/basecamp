@@ -1,4 +1,4 @@
-import { ComponentExample } from "./metadata"
+import { ComponentExample } from "@basecamp/ui/utils"
 
 // This is a simplified version - in a real implementation, you'd use
 // a more sophisticated approach to load and parse the files

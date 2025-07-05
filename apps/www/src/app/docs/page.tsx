@@ -121,12 +121,12 @@ export default function DocsIntroPage() {
       </section>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">What's Next?</h2>
+        <h2 className="text-2xl font-semibold mb-4">What&apos;s Next?</h2>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
             <div className="w-2 h-2 bg-primary rounded-full"></div>
             <span className="text-sm">
-              Browse the components to see what's available
+              Browse the components to see what&apos;s available
             </span>
           </div>
           <div className="flex items-center gap-3">
