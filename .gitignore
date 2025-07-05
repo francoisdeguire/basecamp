@@ -10,6 +10,12 @@
 !.yarn/releases
 !.yarn/versions
 
+# Monorepo packages
+packages/*/node_modules
+packages/*/.next
+packages/*/dist
+packages/*/build
+
 # testing
 /coverage
 
