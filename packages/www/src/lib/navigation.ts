@@ -15,17 +15,17 @@ export const navigation: NavSection[] = [
     items: [
       {
         title: "Introduction",
-        href: "/introduction",
+        href: "/docs",
         description: "Welcome to BaseCamp",
       },
       {
         title: "Installation",
-        href: "/installation",
+        href: "/docs/installation",
         description: "How to install and set up",
       },
       {
         title: "Theming",
-        href: "/theming",
+        href: "/docs/theming",
         description: "Customize colors and styles",
       },
     ],
@@ -35,7 +35,7 @@ export const navigation: NavSection[] = [
     items: [
       {
         title: "Stack",
-        href: "/primitives/stack",
+        href: "/docs/primitives/stack",
         description: "Flexbox container with spacing",
       },
     ],
@@ -45,12 +45,12 @@ export const navigation: NavSection[] = [
     items: [
       {
         title: "Button",
-        href: "/components/button",
+        href: "/docs/components/button",
         description: "Interactive button component",
       },
       {
         title: "John",
-        href: "/components/john",
+        href: "/docs/components/john",
         description: "A simple test component",
       },
     ],
