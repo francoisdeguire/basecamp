@@ -29,11 +29,9 @@ export async function loadExample(
     }
 
     const key = `${componentName.toLowerCase()}-${exampleName}`
-    console.log("Loading example with key:", key)
     const importFn = importMap[key]
 
     if (!importFn) {
-      console.error("Available keys:", Object.keys(importMap))
       throw new Error(`No import mapping found for ${key}`)
     }
 
