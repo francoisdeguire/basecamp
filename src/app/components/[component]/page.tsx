@@ -43,18 +43,22 @@ const components = {
 }
 
 export async function generateStaticParams() {
-  // This would generate static params for all components
-  // For now, we'll handle this dynamically
-  return []
+  const { buildRegistry } = await import("@/lib/registry")
+  const registry = await buildRegistry()
+
+  return registry.components.map((component) => ({
+    component: component.slug,
+  }))
 }
 
 export default async function ComponentPage({
   params,
 }: {
-  params: { component: string }
+  params: Promise<{ component: string }>
 }) {
+  const { component: componentSlug } = await params
   // Get component data
-  const component = await getComponentBySlug(params.component, "ui")
+  const component = await getComponentBySlug(componentSlug, "ui")
 
   if (!component) {
     notFound()

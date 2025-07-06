@@ -43,18 +43,22 @@ const components = {
 }
 
 export async function generateStaticParams() {
-  // This would generate static params for all primitives
-  // For now, we'll handle this dynamically
-  return []
+  const { buildRegistry } = await import("@/lib/registry")
+  const registry = await buildRegistry()
+
+  return registry.primitives.map((primitive) => ({
+    primitive: primitive.slug,
+  }))
 }
 
 export default async function PrimitivePage({
   params,
 }: {
-  params: { primitive: string }
+  params: Promise<{ primitive: string }>
 }) {
+  const { primitive: primitiveSlug } = await params
   // Get primitive data
-  const primitive = await getComponentBySlug(params.primitive, "primitive")
+  const primitive = await getComponentBySlug(primitiveSlug, "primitive")
 
   if (!primitive) {
     notFound()
