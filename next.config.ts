@@ -1,7 +1,23 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.mdx?$/,
+      use: [
+        {
+          loader: "@mdx-js/loader",
+          options: {
+            providerImportSource: "@mdx-js/react",
+          },
+        },
+      ],
+    })
+    return config
+  },
+  experimental: {
+    mdxRs: true,
+  },
+}
 
-export default nextConfig;
+export default nextConfig
