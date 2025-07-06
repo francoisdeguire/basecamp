@@ -1,0 +1,53 @@
+---
+title: Box
+description: A flexible container component that can render as any HTML element
+examples: ["basic", "as-element"]
+props:
+  children:
+    type: "React.ReactNode"
+    description: "The content to display inside the box"
+  className:
+    type: "string"
+    description: "Additional CSS classes to apply"
+  as:
+    type: "keyof JSX.IntrinsicElements"
+    default: "div"
+    description: "The HTML element to render as"
+---
+
+# Box
+
+A flexible container component that can render as any HTML element. This is a foundational primitive that provides a consistent way to create containers with custom styling.
+
+## Usage
+
+The Box component is the most basic building block in your component system.
+
+```tsx
+import { Box } from "@/components/primitives/box/box"
+
+;<Box className="p-4 bg-blue-100 rounded">
+  This is a box with custom styling
+</Box>
+```
+
+## Examples
+
+### Basic Box
+
+<ComponentPreview name="box" example="basic" />
+
+### As Element
+
+<ComponentPreview name="box" example="as-element" />
+
+## Props
+
+<PropsTable name="box" />
+
+## Use Cases
+
+- Creating custom containers
+- Wrapping content with consistent styling
+- Rendering as different HTML elements
+- Building layout components
