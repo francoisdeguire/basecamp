@@ -58,17 +58,31 @@ export default async function PrimitivePage({ params }: PageProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">{metadata.name}</h1>
+        <h1
+          id={`${metadata.name.toLowerCase()}-primitive`}
+          className="text-3xl font-bold"
+        >
+          {metadata.name}
+        </h1>
         <p className="text-lg text-muted-foreground">{metadata.description}</p>
       </div>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Examples</h2>
+        <h2 id="examples" className="text-2xl font-semibold mb-4">
+          Examples
+        </h2>
 
         <div className="space-y-6">
           {validExamples.map((example, index) => (
             <div key={index}>
-              <h3 className="text-lg font-medium mb-3">{example.name}</h3>
+              <h3
+                id={`example-${example.name
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}`}
+                className="text-lg font-medium mb-3"
+              >
+                {example.name}
+              </h3>
               {example.description && (
                 <p className="text-sm text-muted-foreground mb-3">
                   {example.description}
@@ -111,7 +125,9 @@ export default async function PrimitivePage({ params }: PageProps) {
       ))}
 
       <section>
-        <h2 className="text-2xl font-semibold mb-4">Props</h2>
+        <h2 id="props" className="text-2xl font-semibold mb-4">
+          Props
+        </h2>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-border">
             <thead>
@@ -157,7 +173,9 @@ export default async function PrimitivePage({ params }: PageProps) {
 
       {metadata.dependencies && metadata.dependencies.length > 0 && (
         <section>
-          <h2 className="text-2xl font-semibold mb-4">Dependencies</h2>
+          <h2 id="dependencies" className="text-2xl font-semibold mb-4">
+            Dependencies
+          </h2>
           <div className="flex gap-2 flex-wrap">
             {metadata.dependencies.map((dep) => (
               <span
