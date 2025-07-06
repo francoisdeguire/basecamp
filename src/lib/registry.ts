@@ -10,8 +10,8 @@ export interface RegistryData {
 }
 
 export async function buildRegistry(): Promise<RegistryData> {
-  const componentsDir = path.join(process.cwd(), "src/components")
-  const uiDir = path.join(componentsDir, "ui")
+  const componentsDir = path.join(process.cwd(), "src/basecamp")
+  const uiDir = path.join(componentsDir, "components")
   const primitivesDir = path.join(componentsDir, "primitives")
 
   const uiFiles = findMDXFiles(uiDir)

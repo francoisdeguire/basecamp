@@ -1,19 +1,17 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { loadExample } from "@/lib/examples"
 
 interface ComponentPreviewProps {
   name: string
   example: string
-  type?: "ui" | "primitive"
   initialCode?: string
 }
 
 export function ComponentPreview({
   name,
   example,
-  type = "ui",
   initialCode,
 }: ComponentPreviewProps) {
   const [showCode, setShowCode] = useState(false)
@@ -24,16 +22,16 @@ export function ComponentPreview({
   const [copySuccess, setCopySuccess] = useState(false)
 
   // Load example data on client side
-  React.useEffect(() => {
+  useEffect(() => {
     setIsLoading(true)
-    loadExample(name, example, type).then((exampleData) => {
+    loadExample(name, example).then((exampleData) => {
       if (exampleData) {
         setCode(exampleData.code)
         setExampleComponent(() => exampleData.component)
       }
       setIsLoading(false)
     })
-  }, [name, example, type])
+  }, [name, example])
 
   const handleCopyCode = async () => {
     try {

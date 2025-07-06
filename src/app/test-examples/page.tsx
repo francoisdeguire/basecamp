@@ -3,7 +3,7 @@ import { loadAllExamples } from "@/lib/examples"
 import { ComponentPreview } from "@/mdx-components/component-preview"
 
 export default async function TestExamplesPage() {
-  const buttonExamples = await loadAllExamples("Button")
+  const buttonExamples = await loadAllExamples("button")
 
   return (
     <div className="container mx-auto p-8 max-w-4xl">

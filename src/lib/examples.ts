@@ -9,16 +9,35 @@ export interface ExampleInfo {
 // Client-side example loading
 export async function loadExample(
   componentName: string,
-  exampleName: string,
-  type: "ui" | "primitive" = "ui"
+  exampleName: string
 ): Promise<ExampleInfo | null> {
   try {
-    const basePath = type === "ui" ? "ui" : "primitives"
+    // Static mapping for dynamic imports
+    const importMap: Record<
+      string,
+      () => Promise<{ default: React.ComponentType }>
+    > = {
+      "button-basic": () =>
+        import("@/basecamp/components/button/examples/basic"),
+      "button-variants": () =>
+        import("@/basecamp/components/button/examples/variants"),
+      "button-sizes": () =>
+        import("@/basecamp/components/button/examples/sizes"),
+      "box-basic": () => import("@/basecamp/primitives/box/examples/basic"),
+      "box-as-element": () =>
+        import("@/basecamp/primitives/box/examples/as-element"),
+    }
 
-    // Dynamic import of the example component
-    const exampleModule = await import(
-      `@/components/${basePath}/${componentName.toLowerCase()}/examples/${exampleName}`
-    )
+    const key = `${componentName.toLowerCase()}-${exampleName}`
+    console.log("Loading example with key:", key)
+    const importFn = importMap[key]
+
+    if (!importFn) {
+      console.error("Available keys:", Object.keys(importMap))
+      throw new Error(`No import mapping found for ${key}`)
+    }
+
+    const exampleModule = await importFn()
     const ExampleComponent = exampleModule.default
 
     // Get the actual source code
@@ -40,8 +59,7 @@ export async function loadExample(
 
 // Client-side example listing
 export async function loadAllExamples(
-  componentName: string,
-  type: "ui" | "primitive" = "ui"
+  componentName: string
 ): Promise<ExampleInfo[]> {
   // Define available examples for each component
   const componentExamples: Record<string, string[]> = {
@@ -54,7 +72,7 @@ export async function loadAllExamples(
 
   for (const exampleName of exampleNames) {
     try {
-      const example = await loadExample(componentName, exampleName, type)
+      const example = await loadExample(componentName, exampleName)
       if (example) {
         examples.push(example)
       }

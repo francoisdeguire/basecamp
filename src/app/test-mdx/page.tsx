@@ -1,13 +1,13 @@
 import React from "react"
 import { parseMDXFile } from "@/lib/mdx"
-import { Button } from "@/components/ui/button/button"
+import { Button } from "@/basecamp/components/button/button"
 import path from "path"
 
 export default async function TestMDXPage() {
   // Parse the MDX file
   const mdxPath = path.join(
     process.cwd(),
-    "src/components/ui/button/button.mdx"
+    "src/basecamp/components/button/button.mdx"
   )
   const mdxContent = await parseMDXFile(mdxPath)
 
