@@ -1,47 +1,129 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: #171717;
-  --primary-foreground: #ffffff;
-  --secondary: #f5f5f5;
-  --secondary-foreground: #171717;
-  --accent: #f5f5f5;
-  --accent-foreground: #171717;
-  --ring: #171717;
-}
+@theme {
+  /* fonts */
+  --font-sans: "Geist", sans-serif;
+  --font-mono: "Geist Mono", sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-ring: var(--ring);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* colors */
+  --color-background: #fff;
+  --color-foreground: #0a0a0a;
+  --color-card: #fff;
+  --color-card-foreground: #0a0a0a;
+  --color-popover: #fff;
+  --color-popover-foreground: #0a0a0a;
+  --color-primary: #171717;
+  --color-primary-foreground: #fafafa;
+  --color-secondary: #f5f5f5;
+  --color-secondary-foreground: #171717;
+  --color-muted: #f5f5f5;
+  --color-muted-foreground: #737373;
+  --color-accent: #f5f5f5;
+  --color-accent-foreground: #171717;
+  --color-destructive: #ef4444;
+  --color-destructive-foreground: #fafafa;
+  --color-border: #e5e5e5;
+  --color-input: #e5e5e5;
+  --color-ring: #0a0a0a;
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+  --color-sidebar-background: #fafafa;
+  --color-sidebar-foreground: #3f3f46;
+  --color-sidebar-primary: #18181b;
+  --color-sidebar-primary-foreground: #fafafa;
+  --color-sidebar-accent: #f4f4f5;
+  --color-sidebar-accent-foreground: #18181b;
+  --color-sidebar-border: #e5e7eb;
+  --color-sidebar-ring: #3b82f6;
+  --radius: 0.5rem;
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --primary: #ededed;
-    --primary-foreground: #0a0a0a;
-    --secondary: #262626;
-    --secondary-foreground: #ededed;
-    --accent: #262626;
-    --accent-foreground: #ededed;
-    --ring: #ededed;
+  /* animations */
+  --animate-slideDown: accordion-down 0.2s ease-out;
+  --animate-slideUp: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0px;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0px;
+    }
   }
 }
 
+/* dark mode */
+@variant dark (&:where(.dark, .dark *));
+
+.dark {
+  --color-background: #0a0a0a;
+  --color-foreground: #fafafa;
+  --color-card: #0a0a0a;
+  --color-card-foreground: #fafafa;
+  --color-popover: #0a0a0a;
+  --color-popover-foreground: #fafafa;
+  --color-primary: #fafafa;
+  --color-primary-foreground: #171717;
+  --color-secondary: #262626;
+  --color-secondary-foreground: #fafafa;
+  --color-muted: #262626;
+  --color-muted-foreground: #a3a3a3;
+  --color-accent: #262626;
+  --color-accent-foreground: #fafafa;
+  --color-destructive: #7f1d1d;
+  --color-destructive-foreground: #fafafa;
+  --color-border: #262626;
+  --color-input: #262626;
+  --color-ring: #d4d4d4;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+  --color-sidebar-background: #18181b;
+  --color-sidebar-foreground: #f4f4f5;
+  --color-sidebar-primary: #1d4ed8;
+  --color-sidebar-primary-foreground: #fff;
+  --color-sidebar-accent: #27272a;
+  --color-sidebar-accent-foreground: #f4f4f5;
+  --color-sidebar-border: #27272a;
+  --color-sidebar-ring: #3b82f6;
+}
+
+@utility dotted-bg {
+  --dot-color: #0008;
+  --dot-size: 0.9px;
+  --dot-step: 24px;
+  --dot-stop: calc(
+    var(--dot-size) - min(0.5px, 1px / var(--device-pixel-ratio))
+  );
+  background-size: var(--dot-step) var(--dot-step);
+  background-position: calc(50% + var(--dot-step) / 2) 0;
+  background-image: radial-gradient(
+    var(--dot-step) circle,
+    var(--dot-color) var(--dot-stop),
+    transparent var(--dot-size)
+  );
+}
+
+* {
+  @apply border-border;
+}
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-white text-foreground;
 }

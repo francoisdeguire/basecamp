@@ -18,7 +18,7 @@ export default async function PrimitivesPage() {
         {registry.primitives.map((primitive) => (
           <Link
             key={primitive.slug}
-            href={`/primitives/${primitive.slug}`}
+            href={`/docs/primitives/${primitive.slug}`}
             className="group block"
           >
             <div className="border rounded-lg p-6 hover:shadow-lg transition-all duration-200 group-hover:border-green-300">

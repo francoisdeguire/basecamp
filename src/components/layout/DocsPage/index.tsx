@@ -8,7 +8,6 @@ import { ComponentPreview } from "@/mdx-components/component-preview"
 import { PropsTable } from "@/mdx-components/props-table"
 
 // MDX components - using any to avoid complex type issues
-
 const components = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   h1: (props: any) => <h1 className="text-3xl font-bold mb-6" {...props} />,
@@ -42,23 +41,31 @@ const components = {
   PropsTable,
 }
 
-export async function generateStaticParams() {
-  const { buildRegistry } = await import("@/lib/registry")
-  const registry = await buildRegistry()
-
-  return registry.components.map((component) => ({
-    component: component.slug,
-  }))
+interface DocsPageProps {
+  slug: string
+  type: "ui" | "primitive"
 }
 
-export default async function ComponentPage({
-  params,
-}: {
-  params: Promise<{ component: string }>
-}) {
-  const { component: componentSlug } = await params
-  // Get component data
-  const component = await getComponentBySlug(componentSlug, "ui")
+const getTypeConfig = (type: "ui" | "primitive") => {
+  switch (type) {
+    case "ui":
+      return {
+        breadcrumbText: "Components",
+        breadcrumbHref: "/docs/components",
+        headerText: "UI Component",
+      }
+    case "primitive":
+      return {
+        breadcrumbText: "Primitives",
+        breadcrumbHref: "/docs/primitives",
+        headerText: "Primitive",
+      }
+  }
+}
+
+export default async function DocsPage({ slug, type }: DocsPageProps) {
+  // Get component/primitive data
+  const component = await getComponentBySlug(slug, type)
 
   if (!component) {
     notFound()
@@ -71,14 +78,16 @@ export default async function ComponentPage({
     notFound()
   }
 
+  const config = getTypeConfig(type)
+
   return (
     <div className="container mx-auto p-8 max-w-4xl">
       {/* Breadcrumb */}
       <nav className="mb-6">
         <ol className="flex items-center space-x-2 text-sm text-gray-600">
           <li>
-            <Link href="/components" className="hover:text-gray-900">
-              Components
+            <Link href={config.breadcrumbHref} className="hover:text-gray-900">
+              {config.breadcrumbText}
             </Link>
           </li>
           <li>/</li>
@@ -88,7 +97,7 @@ export default async function ComponentPage({
         </ol>
       </nav>
 
-      {/* Component Header */}
+      {/* Component/Primitive Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">
           {component.frontmatter.title}
@@ -99,25 +108,13 @@ export default async function ComponentPage({
         <div className="flex items-center space-x-4 text-sm text-gray-500">
           <span>{component.examples.length} examples</span>
           <span>•</span>
-          <span>UI Component</span>
+          <span>{config.headerText}</span>
         </div>
       </div>
 
       {/* MDX Content */}
       <div className="prose max-w-none">
         <MDXRemote source={mdxContent.content} components={components} />
-      </div>
-
-      {/* Navigation */}
-      <div className="mt-12 pt-8 border-t">
-        <div className="flex justify-between">
-          <Link
-            href="/components"
-            className="text-blue-600 hover:text-blue-800 font-medium"
-          >
-            ← Back to Components
-          </Link>
-        </div>
       </div>
     </div>
   )

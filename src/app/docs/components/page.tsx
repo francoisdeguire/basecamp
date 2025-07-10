@@ -18,7 +18,7 @@ export default async function ComponentsPage() {
         {registry.components.map((component) => (
           <Link
             key={component.slug}
-            href={`/components/${component.slug}`}
+            href={`/docs/components/${component.slug}`}
             className="group block"
           >
             <div className="border rounded-lg p-6 hover:shadow-lg transition-all duration-200 group-hover:border-blue-300">
