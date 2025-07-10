@@ -1,4 +1,4 @@
-import { Box } from "../box"
+import { Box } from "@/components/ui/box"
 
 export default function BasicExample() {
   return (

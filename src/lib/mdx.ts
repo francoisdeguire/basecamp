@@ -25,9 +25,12 @@ export async function parseMDXFile(
     // Parse frontmatter and content
     const { data, content } = matter(fileContent)
 
-    // Validate frontmatter
+    // Validate frontmatter (skip validation for index.mdx)
     const componentName = path.basename(filePath, ".mdx")
-    const validation = validateFrontmatter(componentName, data)
+    const validation =
+      componentName === "index"
+        ? { isValid: true, errors: [] }
+        : validateFrontmatter(componentName, data)
 
     if (!validation.isValid) {
       console.error(

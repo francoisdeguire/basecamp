@@ -3,7 +3,7 @@
 
 const exampleCodeMap: Record<string, string> = {
   // Button examples
-  "button-basic": `import { Button } from "../button"
+  "button-basic": `import { Button } from "@/components/ui/button"
 
 export default function BasicExample() {
   return (
@@ -14,7 +14,7 @@ export default function BasicExample() {
     </div>
   )
 }`,
-  "button-variants": `import { Button } from "../button"
+  "button-variants": `import { Button } from "@/components/ui/button"
 
 export default function VariantsExample() {
   return (
@@ -38,7 +38,7 @@ export default function VariantsExample() {
     </div>
   )
 }`,
-  "button-sizes": `import { Button } from "../button"
+  "button-sizes": `import { Button } from "@/components/ui/button"
 
 export default function SizesExample() {
   return (
@@ -51,7 +51,7 @@ export default function SizesExample() {
 }`,
 
   // Box examples
-  "box-basic": `import { Box } from "../box"
+  "box-basic": `import { Box } from "@/components/ui/box"
 
 export default function BasicExample() {
   return (
@@ -68,7 +68,7 @@ export default function BasicExample() {
     </div>
   )
 }`,
-  "box-as-element": `import { Box } from "../box"
+  "box-as-element": `import { Box } from "@/components/ui/box"
 
 export default function AsElementExample() {
   return (

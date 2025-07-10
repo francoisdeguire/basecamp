@@ -1,4 +1,4 @@
-import { Button } from "../button"
+import { Button } from "@/components/ui/button"
 
 export default function SizesExample() {
   return (

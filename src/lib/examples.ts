@@ -17,15 +17,11 @@ export async function loadExample(
       string,
       () => Promise<{ default: React.ComponentType }>
     > = {
-      "button-basic": () =>
-        import("@/basecamp/components/button/examples/basic"),
-      "button-variants": () =>
-        import("@/basecamp/components/button/examples/variants"),
-      "button-sizes": () =>
-        import("@/basecamp/components/button/examples/sizes"),
-      "box-basic": () => import("@/basecamp/primitives/box/examples/basic"),
-      "box-as-element": () =>
-        import("@/basecamp/primitives/box/examples/as-element"),
+      "button-basic": () => import("@/examples/components/button/basic"),
+      "button-variants": () => import("@/examples/components/button/variants"),
+      "button-sizes": () => import("@/examples/components/button/sizes"),
+      "box-basic": () => import("@/examples/primitives/box/basic"),
+      "box-as-element": () => import("@/examples/primitives/box/as-element"),
     }
 
     const key = `${componentName.toLowerCase()}-${exampleName}`

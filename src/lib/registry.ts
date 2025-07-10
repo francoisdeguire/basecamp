@@ -10,16 +10,16 @@ export interface RegistryData {
 }
 
 export async function buildRegistry(): Promise<RegistryData> {
-  const componentsDir = path.join(process.cwd(), "src/basecamp")
-  const uiDir = path.join(componentsDir, "components")
-  const primitivesDir = path.join(componentsDir, "primitives")
+  const docsDir = path.join(process.cwd(), "src/content/docs")
+  const componentsDir = path.join(docsDir, "components")
+  const primitivesDir = path.join(docsDir, "primitives")
 
-  const uiFiles = findMDXFiles(uiDir)
+  const componentFiles = findMDXFiles(componentsDir)
   const primitiveFiles = findMDXFiles(primitivesDir)
 
-  // Parse all UI components
+  // Parse all components
   const components: ComponentInfo[] = []
-  for (const filePath of uiFiles) {
+  for (const filePath of componentFiles) {
     const mdxContent = await parseMDXFile(filePath)
     if (mdxContent) {
       const componentName = path.basename(filePath, ".mdx")
@@ -28,7 +28,7 @@ export async function buildRegistry(): Promise<RegistryData> {
         type: "ui",
         path: filePath,
         frontmatter: mdxContent.frontmatter,
-        examples: mdxContent.frontmatter.examples,
+        examples: mdxContent.frontmatter.examples || [],
         slug: componentName.toLowerCase(),
       })
     }
@@ -45,7 +45,7 @@ export async function buildRegistry(): Promise<RegistryData> {
         type: "primitive",
         path: filePath,
         frontmatter: mdxContent.frontmatter,
-        examples: mdxContent.frontmatter.examples,
+        examples: mdxContent.frontmatter.examples || [],
         slug: componentName.toLowerCase(),
       })
     }
