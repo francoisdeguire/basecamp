@@ -218,9 +218,12 @@ export default async function DocPage({ params }: PageProps) {
 
   // Handle category listing pages
   if (doc.type === "components-listing" || doc.type === "primitives-listing") {
+    const categorySlug =
+      doc.type === "components-listing" ? "components" : "primitives"
+
     return (
-      <div className="flex">
-        <div className="flex-1 mx-auto w-full max-w-4xl">
+      <div className="flex bg-red-500">
+        <div className="flex-1 mx-auto w-full max-w-2xl">
           <div className="mb-4 flex items-center space-x-1 text-sm leading-none text-muted-foreground">
             <Link href="/docs" className="truncate">
               Docs
@@ -243,7 +246,7 @@ export default async function DocPage({ params }: PageProps) {
               {doc.components?.map((component) => (
                 <Link
                   key={component.slug}
-                  href={`/docs/components/${component.slug}`}
+                  href={`/docs/${categorySlug}/${component.slug}`}
                   className="group block"
                 >
                   <div className="border rounded-lg p-6 hover:shadow-lg transition-all duration-200 group-hover:border-blue-300">
@@ -265,74 +268,14 @@ export default async function DocPage({ params }: PageProps) {
             </div>
           </div>
         </div>
-        {toc.length > 0 && (
-          <aside
-            className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-8 right-8"
-            style={{ float: "right" }}
-          >
-            <DashboardTableOfContents toc={toc} />
-          </aside>
-        )}
+        {toc.length > 0 && <DashboardTableOfContents toc={toc} />}
       </div>
     )
-  }
-
-  // Handle root docs page
-  if (doc.type === "page") {
-    return (
-      <div className="flex">
-        <div className="flex-1 mx-auto w-full max-w-4xl">
-          <div className="space-y-2">
-            <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">
-              {doc.title}
-            </h1>
-            {doc.description && (
-              <p className="text-base text-muted-foreground">
-                {doc.description}
-              </p>
-            )}
-          </div>
-          <div className="pb-12 pt-8">
-            <div className="prose max-w-none">
-              <MDXRemote source={doc.body.code} components={components} />
-            </div>
-          </div>
-        </div>
-        {toc.length > 0 && (
-          <aside
-            className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-8 right-8"
-            style={{ float: "right" }}
-          >
-            <DashboardTableOfContents toc={toc} />
-          </aside>
-        )}
-      </div>
-    )
-  }
-
-  // Handle component and primitive pages
-  const config = {
-    breadcrumbText: doc.type === "components" ? "Components" : "Primitives",
-    breadcrumbHref: `/docs/${doc.type}`,
-    headerText: doc.type === "components" ? "UI Component" : "Primitive",
   }
 
   return (
-    <main>
-      <div className="mx-auto w-full max-w-4xl">
-        {/* Breadcrumb */}
-        <div className="mb-4 flex items-center space-x-1 text-sm leading-none text-muted-foreground">
-          <Link href="/docs" className="truncate">
-            Docs
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <Link href={config.breadcrumbHref} className="truncate">
-            {config.breadcrumbText}
-          </Link>
-          <ChevronRight className="h-3.5 w-3.5" />
-          <div className="text-foreground">{doc.title}</div>
-        </div>
-
+    <div className="flex flex-1">
+      <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-8">
         {/* Header */}
         <div className="space-y-2">
           <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">
@@ -343,32 +286,14 @@ export default async function DocPage({ params }: PageProps) {
           )}
         </div>
 
-        {/* Component/Primitive metadata */}
-        <div className="flex items-center space-x-4 text-sm text-muted-foreground pt-4">
-          <span>{doc.examples?.length || 0} examples</span>
-          <span>•</span>
-          <span>{config.headerText}</span>
-        </div>
-
         {/* Content */}
-        <div className="pb-12 pt-8">
-          <div className="prose max-w-none">
-            <MDXRemote source={doc.body.code} components={components} />
-          </div>
+        <div className="prose max-w-none">
+          <MDXRemote source={doc.body.code} components={components} />
         </div>
-      </div>
+      </main>
 
       {/* Table of Contents */}
-      {toc.length > 0 && (
-        <aside
-          className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-8 right-8"
-          style={{ float: "right" }}
-        >
-          <div className="sticky top-20">
-            <DashboardTableOfContents toc={toc} />
-          </div>
-        </aside>
-      )}
-    </main>
+      {toc.length > 0 && <DashboardTableOfContents toc={toc} />}
+    </div>
   )
 }

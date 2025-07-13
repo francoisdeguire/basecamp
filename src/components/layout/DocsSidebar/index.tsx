@@ -8,8 +8,8 @@ export async function DocsSidebar() {
 
   return (
     <aside className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-8">
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-col gap-0.5 py-4">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-0.5">
           <CategoryTitle>Getting started</CategoryTitle>
           <ul className="flex flex-col gap-0.5">
             <li>
@@ -20,7 +20,7 @@ export async function DocsSidebar() {
           </ul>
         </div>
 
-        <div className="flex flex-col gap-1 py-4">
+        <div className="flex flex-col gap-1">
           <CategoryTitle>Primitives</CategoryTitle>
           <ul className="flex flex-col gap-0.5">
             {registry.primitives.map((primitive) => (
@@ -36,7 +36,7 @@ export async function DocsSidebar() {
           </ul>
         </div>
 
-        <div className="flex flex-col gap-1 py-4">
+        <div className="flex flex-col gap-1">
           <CategoryTitle>Components</CategoryTitle>
           <ul className="flex flex-col gap-0.5">
             {registry.components.map((component) => (

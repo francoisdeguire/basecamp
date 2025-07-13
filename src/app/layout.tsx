@@ -44,17 +44,19 @@ export default function RootLayout({
             </div>
           </div>
 
-          {/* <footer
+          <footer
             inert
-            className="bg-neutral-900 h-[1.2lh] leading-[0.76] text-[calc(0.175*100vw)] text-nowrap tracking-tighter block box-border overflow-hidden"
+            className="bg-neutral-900 h-[1.4lh] leading-[0.76] text-[calc(0.175*100vw)] text-nowrap tracking-tighter block box-border overflow-hidden relative"
             style={{
               clipPath: "border-box",
             }}
           >
-            <div className="flex items-center justify-center fixed bottom-0 left-0 right-0 text-neutral-800">
+            <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-black/15 to-transparent z-10" />
+            <div className="fixed inset-0 h-full w-full bg-[linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            <div className="flex items-center justify-center fixed bottom-0 left-0 right-0 text-transparent bg-clip-text bg-gradient-to-b from-neutral-600 to-neutral-800">
               build it for real
             </div>
-          </footer> */}
+          </footer>
         </div>
       </body>
     </html>
