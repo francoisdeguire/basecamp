@@ -30,7 +30,7 @@ export default function RootLayout({
         className={cn(
           geist.variable,
           geistMono.variable,
-          "font-geist antialiased"
+          "font-sans antialiased"
         )}
       >
         <div>
