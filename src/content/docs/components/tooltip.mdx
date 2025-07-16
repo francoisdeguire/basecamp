@@ -1,0 +1,125 @@
+---
+title: Tooltip
+description: A floating tooltip that displays additional information when hovering or focusing on an element. Built with React Aria for accessibility and supports multiple visual variants and sizes.
+examples: ["basic", "variants", "sizes"]
+props:
+  variant:
+    type: "default | secondary | destructive | outline"
+    default: "default"
+    description: "The visual style of the tooltip"
+  size:
+    type: "sm | default | lg"
+    default: "default"
+    description: "The size of the tooltip content"
+  showArrow:
+    type: "boolean"
+    default: "true"
+    description: "Whether to show an arrow pointing to the trigger element"
+  offset:
+    type: "number"
+    default: "4"
+    description: "The distance in pixels from the trigger element"
+  delay:
+    type: "number"
+    default: "700"
+    description: "The delay in milliseconds before the tooltip appears"
+  closeDelay:
+    type: "number"
+    default: "0"
+    description: "The delay in milliseconds before the tooltip disappears"
+---
+
+## Usage
+
+The Tooltip component provides contextual information when users hover or focus on elements. It's built with React Aria for excellent accessibility support.
+
+```tsx
+import { Tooltip, TooltipTrigger } from "@/registry/ui/tooltip"
+import { Button } from "@/registry/ui/button"
+;<TooltipTrigger>
+  <Button>Hover me</Button>
+  <Tooltip>This is a helpful tooltip</Tooltip>
+</TooltipTrigger>
+```
+
+## Examples
+
+### Basic Tooltip
+
+<ComponentPreview name="tooltip" example="basic" />
+
+### Variants
+
+Different visual styles for various contexts:
+
+<ComponentPreview name="tooltip" example="variants" />
+
+### Sizes
+
+Different sizes for varying amounts of content:
+
+<ComponentPreview name="tooltip" example="sizes" />
+
+## API Reference
+
+### TooltipTrigger
+
+The container component that manages the tooltip state and positioning.
+
+| Prop         | Type              | Default | Description                          |
+| ------------ | ----------------- | ------- | ------------------------------------ |
+| `delay`      | `number`          | `700`   | Delay in milliseconds before showing |
+| `closeDelay` | `number`          | `0`     | Delay in milliseconds before hiding  |
+| `children`   | `React.ReactNode` | -       | Trigger element and tooltip          |
+
+### Tooltip
+
+The styled tooltip content with visual variants and optional arrow.
+
+| Prop        | Type                                                     | Default     | Description                     |
+| ----------- | -------------------------------------------------------- | ----------- | ------------------------------- |
+| `variant`   | `"default" \| "secondary" \| "destructive" \| "outline"` | `"default"` | Visual style                    |
+| `size`      | `"sm" \| "default" \| "lg"`                              | `"default"` | Content size                    |
+| `showArrow` | `boolean`                                                | `true`      | Whether to show arrow           |
+| `placement` | `"top" \| "bottom" \| "left" \| "right"`                 | `"top"`     | Preferred placement             |
+| `offset`    | `number`                                                 | `4`         | Distance from trigger in pixels |
+
+## Props
+
+<PropsTable name="tooltip" />
+
+## Accessibility
+
+- **Keyboard Navigation**: Tooltips appear on focus and disappear when focus moves away
+- **Screen Readers**: Tooltip content is announced when the trigger receives focus
+- **ARIA Attributes**: Proper `aria-describedby` relationship between trigger and tooltip
+- **Focus Management**: Tooltips don't trap focus and work with keyboard navigation
+- **Timing**: Respects user preferences for reduced motion and timing
+
+## Best Practices
+
+- Keep tooltip content concise and helpful
+- Don't put interactive elements inside tooltips
+- Use tooltips for supplementary information, not essential content
+- Consider the tooltip placement to avoid covering important UI elements
+- Test with keyboard navigation and screen readers
+
+## Advanced Usage
+
+### Custom Delays
+
+```tsx
+<TooltipTrigger delay={300} closeDelay={100}>
+  <Button>Quick tooltip</Button>
+  <Tooltip>Appears faster, stays longer</Tooltip>
+</TooltipTrigger>
+```
+
+### Without Arrow
+
+```tsx
+<TooltipTrigger>
+  <Button>Clean tooltip</Button>
+  <Tooltip showArrow={false}>Clean tooltip without arrow</Tooltip>
+</TooltipTrigger>
+```

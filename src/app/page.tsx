@@ -1,4 +1,5 @@
 import { Button } from "@/registry/ui/button"
+import { Tooltip, TooltipTrigger } from "@/registry/ui/tooltip"
 import Link from "next/link"
 import React from "react"
 
@@ -16,6 +17,11 @@ export default async function HomePage() {
       <Button asChild variant="default" size="lg">
         <Link href="/docs">Go to docs</Link>
       </Button>
+
+      <TooltipTrigger closeDelay={30000}>
+        <Button variant="outline">this is a tooltip test</Button>
+        <Tooltip variant="outline">Hello</Tooltip>
+      </TooltipTrigger>
     </div>
   )
 }

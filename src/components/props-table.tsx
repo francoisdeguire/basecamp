@@ -62,6 +62,59 @@ export function PropsTable({ name }: PropsTableProps) {
             description: "The HTML element to render as",
           },
         ]
+      case "tooltip":
+        return [
+          {
+            name: "variant",
+            type: "default | secondary | destructive | outline",
+            default: "default",
+            description: "The visual style of the tooltip",
+          },
+          {
+            name: "size",
+            type: "sm | default | lg",
+            default: "default",
+            description: "The size of the tooltip content",
+          },
+          {
+            name: "showArrow",
+            type: "boolean",
+            default: "true",
+            description:
+              "Whether to show an arrow pointing to the trigger element",
+          },
+          {
+            name: "offset",
+            type: "number",
+            default: "4",
+            description: "The distance in pixels from the trigger element",
+          },
+          {
+            name: "delay",
+            type: "number",
+            default: "700",
+            description: "The delay in milliseconds before the tooltip appears",
+          },
+          {
+            name: "closeDelay",
+            type: "number",
+            default: "0",
+            description:
+              "The delay in milliseconds before the tooltip disappears",
+          },
+          {
+            name: "children",
+            type: "React.ReactNode",
+            default: undefined,
+            description: "The content to display inside the tooltip",
+          },
+          {
+            name: "className",
+            type: "string",
+            default: undefined,
+            description: "Additional CSS classes to apply",
+          },
+        ]
       default:
         return []
     }
