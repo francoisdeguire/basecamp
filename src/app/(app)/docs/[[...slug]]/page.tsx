@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
-import { parseMDXFile } from "@/lib/mdx"
+import { parseMDXFile, getComponentProps } from "@/lib/mdx"
 import { extractTocFromMdx, generateHeaderId } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
@@ -222,8 +222,27 @@ export default async function DocPage({ params }: PageProps) {
   }
 
   // Extract TOC for potential future use
-
   const toc = extractTocFromMdx(doc.body.raw)
+
+  // Pre-load props data for component/primitive pages
+  let propsData = null
+  if (doc.type === "components" || doc.type === "primitives") {
+    const componentName = doc.slugAsParams.split("/")[1]
+    if (componentName) {
+      propsData = await getComponentProps(componentName)
+    }
+  }
+
+  // Create custom PropsTable component with pre-loaded data
+  const CustomPropsTable = ({ name }: { name: string }) => (
+    <PropsTable name={name} propsData={propsData} />
+  )
+
+  // Update components object to use custom PropsTable
+  const customComponents = {
+    ...components,
+    PropsTable: CustomPropsTable,
+  }
 
   // Handle category listing pages
   if (doc.type === "components-listing" || doc.type === "primitives-listing") {
@@ -297,7 +316,7 @@ export default async function DocPage({ params }: PageProps) {
 
         {/* Content */}
         <div className="prose max-w-none">
-          <MDXRemote source={doc.body.code} components={components} />
+          <MDXRemote source={doc.body.code} components={customComponents} />
         </div>
       </main>
 

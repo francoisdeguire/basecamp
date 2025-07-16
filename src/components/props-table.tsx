@@ -1,128 +1,17 @@
 import React from "react"
+import { ComponentProp } from "@/types/component"
 
 interface PropsTableProps {
   name: string
+  propsData?: Record<string, ComponentProp> | null
 }
 
-export function PropsTable({ name }: PropsTableProps) {
-  // This is a placeholder - in the real implementation, you'd get props from the component metadata
-  const getProps = () => {
-    switch (name) {
-      case "button":
-        return [
-          {
-            name: "variant",
-            type: "primary | secondary | ghost",
-            default: "primary",
-            description: "The visual style of the button",
-          },
-          {
-            name: "size",
-            type: "sm | md | lg",
-            default: "md",
-            description: "The size of the button",
-          },
-          {
-            name: "children",
-            type: "React.ReactNode",
-            default: undefined,
-            description: "The content to display inside the button",
-          },
-          {
-            name: "className",
-            type: "string",
-            default: undefined,
-            description: "Additional CSS classes to apply",
-          },
-          {
-            name: "onClick",
-            type: "() => void",
-            default: undefined,
-            description: "Function called when the button is clicked",
-          },
-        ]
-      case "box":
-        return [
-          {
-            name: "children",
-            type: "React.ReactNode",
-            default: undefined,
-            description: "The content to display inside the box",
-          },
-          {
-            name: "className",
-            type: "string",
-            default: undefined,
-            description: "Additional CSS classes to apply",
-          },
-          {
-            name: "as",
-            type: "keyof JSX.IntrinsicElements",
-            default: "div",
-            description: "The HTML element to render as",
-          },
-        ]
-      case "tooltip":
-        return [
-          {
-            name: "variant",
-            type: "default | secondary | destructive | outline",
-            default: "default",
-            description: "The visual style of the tooltip",
-          },
-          {
-            name: "size",
-            type: "sm | default | lg",
-            default: "default",
-            description: "The size of the tooltip content",
-          },
-          {
-            name: "showArrow",
-            type: "boolean",
-            default: "true",
-            description:
-              "Whether to show an arrow pointing to the trigger element",
-          },
-          {
-            name: "offset",
-            type: "number",
-            default: "4",
-            description: "The distance in pixels from the trigger element",
-          },
-          {
-            name: "delay",
-            type: "number",
-            default: "700",
-            description: "The delay in milliseconds before the tooltip appears",
-          },
-          {
-            name: "closeDelay",
-            type: "number",
-            default: "0",
-            description:
-              "The delay in milliseconds before the tooltip disappears",
-          },
-          {
-            name: "children",
-            type: "React.ReactNode",
-            default: undefined,
-            description: "The content to display inside the tooltip",
-          },
-          {
-            name: "className",
-            type: "string",
-            default: undefined,
-            description: "Additional CSS classes to apply",
-          },
-        ]
-      default:
-        return []
-    }
-  }
-
-  const props = getProps()
-
-  if (props.length === 0) {
+/**
+ * PropsTable component that displays props documentation
+ * Props data should be pre-loaded and passed in via propsData prop
+ */
+export function PropsTable({ name, propsData }: PropsTableProps) {
+  if (!propsData || Object.keys(propsData).length === 0) {
     return (
       <div className="border rounded-lg p-4">
         <p className="text-gray-600">
@@ -146,10 +35,10 @@ export function PropsTable({ name }: PropsTableProps) {
           </tr>
         </thead>
         <tbody>
-          {props.map((prop, index) => (
+          {Object.entries(propsData).map(([propName, prop], index) => (
             <tr key={index} className="border-t">
               <td className="p-3 font-mono text-sm text-blue-600">
-                {prop.name}
+                {propName}
               </td>
               <td className="p-3 text-sm text-gray-700">{prop.type}</td>
               <td className="p-3 text-sm text-gray-500">

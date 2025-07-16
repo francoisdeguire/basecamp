@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+---
+
+# Development Server Management
+
+## User Preference
+
+The user typically keeps a development server (`npm run dev`) running in the background during development sessions.
+
+## Guidelines
+
+- **Do NOT start additional dev server instances** unless explicitly requested
+- Before running `npm run dev`, check if there are any indications that a server might already be running
+- When testing changes, prefer using the existing running server rather than starting a new one
+- If you need to verify functionality, suggest the user check their existing dev server or ask them to restart it if needed
+- Only start background dev servers when:
+  - User explicitly requests it
+  - It's the first time setting up the project
+  - There are clear indications no server is currently running
+
+## Debugging Approach
+
+- Use build commands (`npm run build`) to check for compilation errors
+- Use static analysis and type checking rather than starting servers
+- If server testing is needed, mention that the user should check their existing dev server
+
+This avoids port conflicts and unnecessary resource usage while maintaining efficient development workflow.
