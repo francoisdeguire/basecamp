@@ -6,6 +6,7 @@ import { remark } from "remark"
 import html from "remark-html"
 import { ComponentFrontmatter, ValidationResult } from "@/types/component"
 import { validateFrontmatter } from "@/lib/doc-utils"
+import { CONFIG } from "@/lib/config"
 
 export interface MDXContent {
   frontmatter: ComponentFrontmatter
@@ -25,12 +26,16 @@ export async function parseMDXFile(
     // Parse frontmatter and content
     const { data, content } = matter(fileContent)
 
-    // Validate frontmatter (skip validation for index.mdx)
+    // Determine if this is a component/primitive page that needs validation
+    const isComponentPage = filePath.includes(CONFIG.COMPONENTS_DOCS_DIR)
+    const isPrimitivePage = filePath.includes(CONFIG.PRIMITIVES_DOCS_DIR)
+    const needsValidation = isComponentPage || isPrimitivePage
+
+    // Validate frontmatter only for component and primitive pages
     const componentName = path.basename(filePath, ".mdx")
-    const validation =
-      componentName === "index"
-        ? { isValid: true, errors: [] }
-        : validateFrontmatter(componentName, data)
+    const validation = needsValidation
+      ? validateFrontmatter(componentName, data)
+      : { isValid: true, errors: [] }
 
     if (!validation.isValid) {
       console.error(

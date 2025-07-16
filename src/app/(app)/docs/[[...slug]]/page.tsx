@@ -5,7 +5,7 @@ import { extractTocFromMdx, generateHeaderId } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
 import { buildRegistry } from "@/lib/registry"
-import { CONFIG } from "@/lib/config"
+import { getRootPages } from "@/lib/config"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import type { Metadata } from "next"
@@ -61,10 +61,17 @@ interface PageProps {
 async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
   const slug = params.slug?.join("/") || ""
 
-  // Handle root docs page
-  if (!slug || slug === "") {
-    const mdxContent = await parseMDXFile(CONFIG.ROOT_INDEX_FILE)
+  // Handle root docs pages
+  if (!slug || !slug.includes("/")) {
+    const rootPages = getRootPages()
+    const targetSlug = slug || ""
+    const rootPage = rootPages.find((page) => page.slug === targetSlug)
 
+    if (!rootPage) {
+      return null
+    }
+
+    const mdxContent = await parseMDXFile(rootPage.path)
     if (!mdxContent) {
       return null
     }
@@ -72,11 +79,11 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
     return {
       title: mdxContent.frontmatter.title,
       description: mdxContent.frontmatter.description,
-      slug: "",
-      slugAsParams: "",
+      slug: targetSlug ? `/docs/${targetSlug}` : "",
+      slugAsParams: targetSlug,
       body: { raw: mdxContent.content, code: mdxContent.content },
       frontmatter: mdxContent.frontmatter,
-      path: CONFIG.ROOT_INDEX_FILE,
+      path: rootPage.path,
       type: "page" as const,
     }
   }
@@ -186,10 +193,13 @@ export async function generateMetadata({
 // Generate static params for better performance (like shadcn-ui)
 export async function generateStaticParams() {
   const registry = await buildRegistry()
+  const rootPages = getRootPages()
 
   const params = [
-    // Root docs page
-    { slug: [] },
+    // Root docs pages (including index and any additional pages)
+    ...rootPages.map((page) => ({
+      slug: page.slug ? [page.slug] : [],
+    })),
     // Component pages
     ...registry.components.map((component) => ({
       slug: ["components", component.slug],

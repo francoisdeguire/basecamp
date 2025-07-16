@@ -38,7 +38,12 @@ export function validateFrontmatter(
     })
   }
 
-  if (!Array.isArray(frontmatter.examples)) {
+  // Only validate examples and props for component pages
+  // (Skip validation if these fields are not present, as they're optional for docs pages)
+  if (
+    frontmatter.examples !== undefined &&
+    !Array.isArray(frontmatter.examples)
+  ) {
     errors.push({
       component: componentName,
       field: "examples",
@@ -46,7 +51,10 @@ export function validateFrontmatter(
     })
   }
 
-  if (!frontmatter.props || typeof frontmatter.props !== "object") {
+  if (
+    frontmatter.props !== undefined &&
+    (typeof frontmatter.props !== "object" || frontmatter.props === null)
+  ) {
     errors.push({
       component: componentName,
       field: "props",

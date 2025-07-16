@@ -1,4 +1,5 @@
 import path from "path"
+import fs from "fs"
 
 /**
  * Central configuration for all directory paths used throughout the project.
@@ -44,4 +45,22 @@ export function getRelativePath(absolutePath: string): string {
  */
 export function getAbsolutePath(relativePath: string): string {
   return path.join(CONFIG.ROOT_DIR, relativePath)
+}
+
+/**
+ * Dynamically discover all root pages
+ */
+export function getRootPages(): { slug: string; path: string }[] {
+  try {
+    const files = fs.readdirSync(CONFIG.DOCS_ROOT_DIR)
+    return files
+      .filter((file) => file.endsWith(".mdx"))
+      .map((file) => ({
+        slug: file === "index.mdx" ? "" : path.basename(file, ".mdx"),
+        path: path.join(CONFIG.DOCS_ROOT_DIR, file),
+      }))
+  } catch (error) {
+    console.error("Error reading root pages directory:", error)
+    return []
+  }
 }

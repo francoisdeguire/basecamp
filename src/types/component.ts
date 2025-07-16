@@ -8,8 +8,8 @@ export interface ComponentProp {
 export interface ComponentFrontmatter {
   title: string
   description: string
-  examples: string[]
-  props: Record<string, ComponentProp>
+  examples?: string[]
+  props?: Record<string, ComponentProp>
   dependencies?: string[]
   copyable?: boolean
 }
