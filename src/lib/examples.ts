@@ -17,11 +17,15 @@ export async function loadExample(
       string,
       () => Promise<{ default: React.ComponentType }>
     > = {
-      "button-basic": () => import("@/examples/components/button/basic"),
-      "button-variants": () => import("@/examples/components/button/variants"),
-      "button-sizes": () => import("@/examples/components/button/sizes"),
-      "box-basic": () => import("@/examples/primitives/box/basic"),
-      "box-as-element": () => import("@/examples/primitives/box/as-element"),
+      "button-basic": () =>
+        import("@/registry/examples/components/button/basic"),
+      "button-variants": () =>
+        import("@/registry/examples/components/button/variants"),
+      "button-sizes": () =>
+        import("@/registry/examples/components/button/sizes"),
+      "box-basic": () => import("@/registry/examples/primitives/box/basic"),
+      "box-as-element": () =>
+        import("@/registry/examples/primitives/box/as-element"),
     }
 
     const key = `${componentName.toLowerCase()}-${exampleName}`

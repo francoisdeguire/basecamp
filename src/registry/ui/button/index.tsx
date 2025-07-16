@@ -1,17 +1,21 @@
 "use client"
 
 import * as React from "react"
+import { forwardRef } from "react"
 import { Button as AriaButton } from "react-aria-components"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "./variants"
 import { type ButtonProps } from "./types"
 
 /**
- * A polymorphic button component built on React Aria with full accessibility support.
+ * Basecamp Component Library - Button
  *
  * Supports multiple visual variants, sizes, and can be used as a regular button or
  * merged with any child element using the `asChild` pattern.
  *
+ * @see http://localhost:3000/docs/components/button
+ *
+ * @example
  * ```tsx
  * // Standard button
  * <Button variant="default" size="lg">Click me</Button>
@@ -20,10 +24,9 @@ import { type ButtonProps } from "./types"
  * <Button asChild variant="outline">
  *   <a href="/home">Navigate home</a>
  * </Button>
-
  * ```
  */
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const classes = cn(buttonVariants({ variant, size }), className)
 

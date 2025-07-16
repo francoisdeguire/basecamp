@@ -4,13 +4,13 @@ import path from "path"
 // File path mapping for examples
 const exampleFileMap: Record<string, string> = {
   // Button examples
-  "button-basic": "src/examples/components/button/basic.tsx",
-  "button-variants": "src/examples/components/button/variants.tsx",
-  "button-sizes": "src/examples/components/button/sizes.tsx",
+  "button-basic": "src/registry/examples/components/button/basic.tsx",
+  "button-variants": "src/registry/examples/components/button/variants.tsx",
+  "button-sizes": "src/registry/examples/components/button/sizes.tsx",
 
   // Box examples
-  "box-basic": "src/examples/primitives/box/basic.tsx",
-  "box-as-element": "src/examples/primitives/box/as-element.tsx",
+  "box-basic": "src/registry/examples/primitives/box/basic.tsx",
+  "box-as-element": "src/registry/examples/primitives/box/as-element.tsx",
 }
 
 async function buildExamples() {

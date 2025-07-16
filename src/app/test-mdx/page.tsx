@@ -1,13 +1,13 @@
 import React from "react"
 import { parseMDXFile } from "@/lib/mdx"
-import { Button } from "@/basecamp/components/button/button"
+import { Button } from "@/registry/ui/button"
 import path from "path"
 
 export default async function TestMDXPage() {
   // Parse the MDX file
   const mdxPath = path.join(
     process.cwd(),
-    "src/basecamp/components/button/button.mdx"
+    "src/content/docs/components/button.mdx"
   )
   const mdxContent = await parseMDXFile(mdxPath)
 
@@ -66,7 +66,7 @@ export default async function TestMDXPage() {
             <div>
               <h3 className="text-lg font-medium mb-2">Button Variants</h3>
               <div className="flex gap-2">
-                <Button variant="primary">Primary</Button>
+                <Button variant="default">Default</Button>
                 <Button variant="secondary">Secondary</Button>
                 <Button variant="ghost">Ghost</Button>
               </div>
@@ -76,7 +76,7 @@ export default async function TestMDXPage() {
               <h3 className="text-lg font-medium mb-2">Button Sizes</h3>
               <div className="flex gap-2 items-center">
                 <Button size="sm">Small</Button>
-                <Button size="md">Medium</Button>
+                <Button size="default">Default</Button>
                 <Button size="lg">Large</Button>
               </div>
             </div>

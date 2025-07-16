@@ -1,6 +1,6 @@
 import React from "react"
 import { loadAllExamples } from "@/lib/examples"
-import { ComponentPreview } from "@/mdx-components/component-preview"
+import { ComponentPreview } from "@/components/component-preview"
 
 export default async function TestExamplesPage() {
   const buttonExamples = await loadAllExamples("button")

@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/registry/ui/button"
 
 export default function VariantsExample() {
   return (
