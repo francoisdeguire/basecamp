@@ -63,7 +63,10 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
 
   // Handle root docs page
   if (!slug || slug === "") {
-    const indexPath = path.join(process.cwd(), "src/content/docs/index.mdx")
+    const indexPath = path.join(
+      process.cwd(),
+      "src/content/docs/(root)/index.mdx"
+    )
     const mdxContent = await parseMDXFile(indexPath)
 
     if (!mdxContent) {
