@@ -21,7 +21,7 @@ export function DashboardTableOfContents({ toc }: TocProps) {
 
   return (
     <aside className="sticky top-16 w-64 max-h-screen overflow-y-auto pt-8 space-y-2 px-6">
-      <p className="text-xs text-muted-foreground">On This Page</p>
+      <p className="text-xs text-muted-foreground select-none">On This Page</p>
       <Tree items={toc} activeItem={activeHeading} />
     </aside>
   )

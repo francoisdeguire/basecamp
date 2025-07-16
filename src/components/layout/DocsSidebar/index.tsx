@@ -22,7 +22,7 @@ export async function DocsSidebar() {
 
   return (
     <aside className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-5">
-      <div className="flex flex-col gap-6 p-3">
+      <div className="flex flex-col gap-5 p-3">
         <div className="flex flex-col gap-0.5">
           <CategoryTitle>Getting started</CategoryTitle>
           <ul className="flex flex-col gap-0.5">

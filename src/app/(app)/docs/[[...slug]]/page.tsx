@@ -7,7 +7,6 @@ import { PropsTable } from "@/components/props-table"
 import { buildRegistry } from "@/lib/registry"
 import { getRootPages } from "@/lib/config"
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
 import type { Metadata } from "next"
 import { DashboardTableOfContents } from "@/components/layout/TOC"
 
@@ -61,34 +60,7 @@ interface PageProps {
 async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
   const slug = params.slug?.join("/") || ""
 
-  // Handle root docs pages
-  if (!slug || !slug.includes("/")) {
-    const rootPages = getRootPages()
-    const targetSlug = slug || ""
-    const rootPage = rootPages.find((page) => page.slug === targetSlug)
-
-    if (!rootPage) {
-      return null
-    }
-
-    const mdxContent = await parseMDXFile(rootPage.path)
-    if (!mdxContent) {
-      return null
-    }
-
-    return {
-      title: mdxContent.frontmatter.title,
-      description: mdxContent.frontmatter.description,
-      slug: targetSlug ? `/docs/${targetSlug}` : "",
-      slugAsParams: targetSlug,
-      body: { raw: mdxContent.content, code: mdxContent.content },
-      frontmatter: mdxContent.frontmatter,
-      path: rootPage.path,
-      type: "page" as const,
-    }
-  }
-
-  // Handle category listing pages
+  // Handle category listing pages FIRST
   if (slug === "components") {
     const registry = await buildRegistry()
     return {
@@ -118,6 +90,33 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
       path: "",
       type: "primitives-listing" as const,
       primitives: registry.primitives,
+    }
+  }
+
+  // Handle root docs pages
+  if (!slug || !slug.includes("/")) {
+    const rootPages = getRootPages()
+    const targetSlug = slug || ""
+    const rootPage = rootPages.find((page) => page.slug === targetSlug)
+
+    if (!rootPage) {
+      return null
+    }
+
+    const mdxContent = await parseMDXFile(rootPage.path)
+    if (!mdxContent) {
+      return null
+    }
+
+    return {
+      title: mdxContent.frontmatter.title,
+      description: mdxContent.frontmatter.description,
+      slug: targetSlug ? `/docs/${targetSlug}` : "",
+      slugAsParams: targetSlug,
+      body: { raw: mdxContent.content, code: mdxContent.content },
+      frontmatter: mdxContent.frontmatter,
+      path: rootPage.path,
+      type: "page" as const,
     }
   }
 
@@ -200,6 +199,9 @@ export async function generateStaticParams() {
     ...rootPages.map((page) => ({
       slug: page.slug ? [page.slug] : [],
     })),
+    // Category listing pages
+    { slug: ["components"] },
+    { slug: ["primitives"] },
     // Component pages
     ...registry.components.map((component) => ({
       slug: ["components", component.slug],
@@ -248,17 +250,13 @@ export default async function DocPage({ params }: PageProps) {
   if (doc.type === "components-listing" || doc.type === "primitives-listing") {
     const categorySlug =
       doc.type === "components-listing" ? "components" : "primitives"
+    const items =
+      doc.type === "components-listing" ? doc.components : doc.primitives
 
     return (
-      <div className="flex bg-red-500">
-        <div className="flex-1 mx-auto w-full max-w-2xl">
-          <div className="mb-4 flex items-center space-x-1 text-sm leading-none text-muted-foreground">
-            <Link href="/docs" className="truncate">
-              Docs
-            </Link>
-            <ChevronRight className="h-3.5 w-3.5" />
-            <div className="text-foreground">{doc.title}</div>
-          </div>
+      <div className="flex flex-1 pr-64">
+        <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-8">
+          {/* Header */}
           <div className="space-y-2">
             <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">
               {doc.title}
@@ -269,34 +267,20 @@ export default async function DocPage({ params }: PageProps) {
               </p>
             )}
           </div>
-          <div className="pb-12 pt-8">
-            <div className="grid grid-cols-3 gap-6">
-              {doc.components?.map((component) => (
-                <Link
-                  key={component.slug}
-                  href={`/docs/${categorySlug}/${component.slug}`}
-                  className="group block"
-                >
-                  <div className="border rounded-lg p-6 hover:shadow-lg transition-all duration-200 group-hover:border-blue-300">
-                    <h2 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
-                      {component.frontmatter.title}
-                    </h2>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                      {component.frontmatter.description}
-                    </p>
-                    <div className="flex justify-between items-center text-xs text-gray-500">
-                      <span>{component.examples.length} examples</span>
-                      <span className="group-hover:text-blue-500 transition-colors">
-                        View details →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+
+          {/* Content */}
+          <div className="grid grid-cols-3 gap-6">
+            {items?.map((component) => (
+              <Link
+                key={component.slug}
+                href={`/docs/${categorySlug}/${component.slug}`}
+                className="text-lg font-medium hover:underline underline-offset-4"
+              >
+                {component.frontmatter.title}
+              </Link>
+            ))}
           </div>
-        </div>
-        {toc.length > 0 && <DashboardTableOfContents toc={toc} />}
+        </main>
       </div>
     )
   }
@@ -321,7 +305,7 @@ export default async function DocPage({ params }: PageProps) {
       </main>
 
       {/* Table of Contents */}
-      {toc.length > 0 && <DashboardTableOfContents toc={toc} />}
+      <DashboardTableOfContents toc={toc} />
     </div>
   )
 }
