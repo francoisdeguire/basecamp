@@ -5,7 +5,7 @@ import { extractTocFromMdx, generateHeaderId } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
 import { buildRegistry } from "@/lib/registry"
-import path from "path"
+import { CONFIG } from "@/lib/config"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import type { Metadata } from "next"
@@ -63,11 +63,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
 
   // Handle root docs page
   if (!slug || slug === "") {
-    const indexPath = path.join(
-      process.cwd(),
-      "src/content/docs/(root)/index.mdx"
-    )
-    const mdxContent = await parseMDXFile(indexPath)
+    const mdxContent = await parseMDXFile(CONFIG.ROOT_INDEX_FILE)
 
     if (!mdxContent) {
       return null
@@ -80,7 +76,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
       slugAsParams: "",
       body: { raw: mdxContent.content, code: mdxContent.content },
       frontmatter: mdxContent.frontmatter,
-      path: indexPath,
+      path: CONFIG.ROOT_INDEX_FILE,
       type: "page" as const,
     }
   }

@@ -1,6 +1,7 @@
 import path from "path"
 import { findMDXFiles, parseMDXFile } from "./mdx"
 import { ComponentInfo } from "@/types/component"
+import { CONFIG } from "./config"
 
 export interface RegistryData {
   components: ComponentInfo[]
@@ -10,12 +11,8 @@ export interface RegistryData {
 }
 
 export async function buildRegistry(): Promise<RegistryData> {
-  const docsDir = path.join(process.cwd(), "src/content/docs")
-  const componentsDir = path.join(docsDir, "components")
-  const primitivesDir = path.join(docsDir, "primitives")
-
-  const componentFiles = findMDXFiles(componentsDir)
-  const primitiveFiles = findMDXFiles(primitivesDir)
+  const componentFiles = findMDXFiles(CONFIG.COMPONENTS_DOCS_DIR)
+  const primitiveFiles = findMDXFiles(CONFIG.PRIMITIVES_DOCS_DIR)
 
   // Parse all components
   const components: ComponentInfo[] = []
