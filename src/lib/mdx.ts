@@ -5,7 +5,7 @@ import { serialize } from "next-mdx-remote/serialize"
 import { remark } from "remark"
 import html from "remark-html"
 import { ComponentFrontmatter, ValidationResult } from "@/types/component"
-import { validateFrontmatter } from "@/lib/utils"
+import { validateFrontmatter } from "@/lib/doc-utils"
 
 export interface MDXContent {
   frontmatter: ComponentFrontmatter
