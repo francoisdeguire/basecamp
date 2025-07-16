@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote/rsc"
 import { parseMDXFile, getComponentProps } from "@/lib/mdx"
-import { extractTocFromMdx, generateHeaderId } from "@/lib/toc"
+import { extractTocFromMdx } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
 import { buildRegistry } from "@/lib/registry"
@@ -9,47 +9,13 @@ import { getRootPages } from "@/lib/config"
 import Link from "next/link"
 import type { Metadata } from "next"
 import { DashboardTableOfContents } from "@/components/layout/TOC"
+import { mdxComponents } from "@/mdx-components"
 
-// MDX components - using any to avoid complex type issues with MDX
-const components = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  h1: (props: any) => <h1 className="text-3xl font-bold mb-6" {...props} />,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  h2: (props: any) => (
-    <h2
-      id={generateHeaderId(props.children)}
-      className="text-2xl font-semibold mb-4 mt-8 scroll-mt-20"
-      {...props}
-    />
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  h3: (props: any) => (
-    <h3
-      id={generateHeaderId(props.children)}
-      className="text-xl font-medium mb-3 mt-6 scroll-mt-20"
-      {...props}
-    />
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  p: (props: any) => (
-    <p className="mb-4 text-gray-700 leading-relaxed" {...props} />
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  code: (props: any) => (
-    <code
-      className="bg-gray-100 px-1 py-0.5 rounded text-sm font-mono"
-      {...props}
-    />
-  ),
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  pre: (props: any) => (
-    <pre
-      className="bg-gray-100 p-4 rounded mb-4 overflow-x-auto text-sm"
-      {...props}
-    />
-  ),
+// Enhanced MDX components with copy button functionality
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const components: any = {
+  ...mdxComponents,
   ComponentPreview,
-  PropsTable,
 }
 
 interface PageProps {
