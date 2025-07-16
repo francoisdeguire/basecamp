@@ -1,6 +1,7 @@
 import { promises as fs, watch } from "fs"
 import path from "path"
 import { CONFIG } from "../src/lib/config"
+import { highlightCode } from "../src/lib/highlight-code"
 
 // Dynamic example discovery
 async function discoverExamples(): Promise<Record<string, string>> {
@@ -66,16 +67,25 @@ async function buildExamples() {
   }
 
   const exampleCodeMap: Record<string, string> = {}
+  const exampleHighlightedMap: Record<string, string> = {}
 
-  // Read each example file
+  // Read and highlight each example file
+  console.log("✨ Highlighting code examples...")
   for (const [key, filePath] of Object.entries(exampleFileMap)) {
     try {
       const fullPath = path.join(CONFIG.ROOT_DIR, filePath)
       const content = await fs.readFile(fullPath, "utf-8")
       exampleCodeMap[key] = content
+
+      // Pre-highlight the code
+      const highlighted = await highlightCode(content, "tsx")
+      exampleHighlightedMap[key] = highlighted
     } catch (error) {
       console.warn(`⚠️  Could not read ${filePath}:`, error)
       exampleCodeMap[key] = `// Error loading code for ${key}`
+      exampleHighlightedMap[
+        key
+      ] = `<pre><code>// Error loading code for ${key}</code></pre>`
     }
   }
 
@@ -89,6 +99,12 @@ ${Object.entries(exampleCodeMap)
   .join("\n")}
 }
 
+const exampleHighlightedMap: Record<string, string> = {
+${Object.entries(exampleHighlightedMap)
+  .map(([key, html]) => `  "${key}": ${JSON.stringify(html)},`)
+  .join("\n")}
+}
+
 export function getExampleCode(
   componentName: string,
   exampleName: string
@@ -97,6 +113,17 @@ export function getExampleCode(
   return (
     exampleCodeMap[key] ||
     \`// No code available for \${componentName}/\${exampleName}\`
+  )
+}
+
+export function getExampleHighlightedCode(
+  componentName: string,
+  exampleName: string
+): string {
+  const key = \`\${componentName}-\${exampleName}\`
+  return (
+    exampleHighlightedMap[key] ||
+    \`<pre><code>// No code available for \${componentName}/\${exampleName}</code></pre>\`
   )
 }
 `

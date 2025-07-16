@@ -3,6 +3,7 @@
 import * as React from "react"
 import { TocItem } from "@/lib/toc"
 import { cn } from "@/lib/utils"
+import { ArrowUpRight } from "lucide-react"
 
 interface TocProps {
   toc: TocItem[]
@@ -20,9 +21,27 @@ export function DashboardTableOfContents({ toc }: TocProps) {
   }
 
   return (
-    <aside className="sticky top-16 w-64 max-h-screen overflow-y-auto pt-8 space-y-2 px-6">
-      <p className="text-xs text-muted-foreground select-none">On This Page</p>
-      <Tree items={toc} activeItem={activeHeading} />
+    <aside className="sticky top-16 w-64 max-h-screen overflow-y-auto pt-8 space-y-8">
+      <div className="space-y-2 px-6">
+        <p className="text-xs text-muted-foreground select-none">
+          On This Page
+        </p>
+        <Tree items={toc} activeItem={activeHeading} />
+      </div>
+
+      <div className="w-full bg-muted p-6 rounded-lg flex flex-col gap-2.5">
+        <h3 className="text-base font-medium">Something wrong?</h3>
+        <p className="text-sm text-muted-foreground inline-flex items-center gap-1">
+          Let me know on{" "}
+          <a
+            href="https://volume7.slack.com/archives/C096TPUCQRW"
+            className="h-5 pt-px flex items-center gap-0.5 hover:text-foreground border-b !border-b-transparent hover:!border-b-foreground transition-all duration-200"
+          >
+            <span>Slack</span>
+            <ArrowUpRight className="size-4" />
+          </a>
+        </p>
+      </div>
     </aside>
   )
 }

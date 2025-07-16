@@ -1,0 +1,58 @@
+---
+title: Tabs
+description: A set of layered sections of content—known as tab panels—that are displayed one at a time.
+---
+
+import { ComponentPreview } from "@/components/component-preview"
+
+A Tabs component built with React Aria Components for accessible tab navigation.
+
+## Usage
+
+<ComponentPreview name="tabs" example="basic" align="start" />
+
+## Features
+
+- **Accessible**: Built with React Aria Components for full accessibility support
+- **Keyboard Navigation**: Navigate tabs with arrow keys, Home, End, and Space/Enter
+- **Focus Management**: Automatic focus management when switching tabs
+- **Flexible**: Support for both horizontal and vertical orientations
+- **Customizable**: Extensible variant system for styling
+
+## API Reference
+
+### Tabs
+
+The root container for the tab interface.
+
+```tsx
+<Tabs defaultSelectedKey="tab1" orientation="horizontal">
+  {/* TabList and TabPanels */}
+</Tabs>
+```
+
+### TabList
+
+Container for the tab buttons.
+
+```tsx
+<TabList aria-label="Navigation tabs">{/* Tab components */}</TabList>
+```
+
+### Tab
+
+Individual tab button.
+
+```tsx
+<Tab id="tab1">Tab Label</Tab>
+```
+
+### TabPanel
+
+Content panel associated with a tab.
+
+```tsx
+<TabPanel id="tab1">
+  <p>Panel content</p>
+</TabPanel>
+```
