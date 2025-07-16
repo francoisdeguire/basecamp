@@ -1,9 +1,9 @@
-import Link from "next/link"
 import React from "react"
 import { CategoryTitle } from "./CategoryTitle"
 import { buildRegistry } from "@/lib/registry"
 import { getRootPages } from "@/lib/config"
 import { parseMDXFile } from "@/lib/mdx"
+import { SidebarItem } from "./SidebarItem"
 
 export async function DocsSidebar() {
   const registry = await buildRegistry()
@@ -21,20 +21,18 @@ export async function DocsSidebar() {
   )
 
   return (
-    <aside className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-8">
-      <div className="flex flex-col gap-6">
+    <aside className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-5">
+      <div className="flex flex-col gap-6 p-3">
         <div className="flex flex-col gap-0.5">
           <CategoryTitle>Getting started</CategoryTitle>
           <ul className="flex flex-col gap-0.5">
             {rootPagesWithTitles.map((page) => (
-              <li key={page.slug || "index"}>
-                <Link
-                  href={page.slug ? `/docs/${page.slug}` : "/docs"}
-                  className="text-sm hover:underline h-8"
-                >
-                  {page.title}
-                </Link>
-              </li>
+              <SidebarItem
+                href={page.slug ? `/docs/${page.slug}` : "/docs"}
+                key={page.slug || "index"}
+              >
+                {page.title}
+              </SidebarItem>
             ))}
           </ul>
         </div>
@@ -43,14 +41,12 @@ export async function DocsSidebar() {
           <CategoryTitle>Primitives</CategoryTitle>
           <ul className="flex flex-col gap-0.5">
             {registry.primitives.map((primitive) => (
-              <li key={primitive.slug}>
-                <Link
-                  href={`/docs/primitives/${primitive.slug}`}
-                  className="text-sm hover:underline"
-                >
-                  {primitive.frontmatter.title}
-                </Link>
-              </li>
+              <SidebarItem
+                href={`/docs/primitives/${primitive.slug}`}
+                key={primitive.slug}
+              >
+                {primitive.frontmatter.title}
+              </SidebarItem>
             ))}
           </ul>
         </div>
@@ -59,14 +55,12 @@ export async function DocsSidebar() {
           <CategoryTitle>Components</CategoryTitle>
           <ul className="flex flex-col gap-0.5">
             {registry.components.map((component) => (
-              <li key={component.slug}>
-                <Link
-                  href={`/docs/components/${component.slug}`}
-                  className="text-sm hover:underline"
-                >
-                  {component.frontmatter.title}
-                </Link>
-              </li>
+              <SidebarItem
+                href={`/docs/components/${component.slug}`}
+                key={component.slug}
+              >
+                {component.frontmatter.title}
+              </SidebarItem>
             ))}
           </ul>
         </div>

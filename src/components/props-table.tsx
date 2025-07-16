@@ -6,10 +6,6 @@ interface PropsTableProps {
   propsData?: Record<string, ComponentProp> | null
 }
 
-/**
- * PropsTable component that displays props documentation
- * Props data should be pre-loaded and passed in via propsData prop
- */
 export function PropsTable({ name, propsData }: PropsTableProps) {
   if (!propsData || Object.keys(propsData).length === 0) {
     return (
