@@ -3,20 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "npm run build:examples && next dev --turbopack",
     "dev:webpack": "next dev",
-    "build": "next build",
+    "build": "npm run build:examples && next build",
+    "build:examples": "tsx scripts/build-examples.ts",
+    "watch:examples": "tsx scripts/build-examples.ts --watch",
     "start": "next start",
     "lint": "next lint",
     "turbo:build": "npx turbo build",
     "turbo:dev": "npx turbo dev"
   },
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "@types/mdx": "^2.0.13",
     "@types/prismjs": "^1.26.5",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.525.0",
@@ -24,6 +29,7 @@
     "next-mdx-remote": "^5.0.0",
     "prismjs": "^1.30.0",
     "react": "^19.0.0",
+    "react-aria-components": "^1.10.1",
     "react-dom": "^19.0.0",
     "react-syntax-highlighter": "^15.6.1",
     "remark": "^15.0.1",
@@ -40,6 +46,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
     "tailwindcss": "^4",
+    "tsx": "^4.19.2",
     "turbo": "^2.5.4",
     "typescript": "^5"
   }
