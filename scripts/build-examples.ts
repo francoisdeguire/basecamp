@@ -1,20 +1,67 @@
 import { promises as fs, watch } from "fs"
 import path from "path"
 
-// File path mapping for examples
-const exampleFileMap: Record<string, string> = {
-  // Button examples
-  "button-basic": "src/registry/examples/components/button/basic.tsx",
-  "button-variants": "src/registry/examples/components/button/variants.tsx",
-  "button-sizes": "src/registry/examples/components/button/sizes.tsx",
+// Dynamic example discovery
+async function discoverExamples(): Promise<Record<string, string>> {
+  const exampleFileMap: Record<string, string> = {}
+  const examplesRoot = path.join(process.cwd(), "src/registry/examples")
 
-  // Box examples
-  "box-basic": "src/registry/examples/primitives/box/basic.tsx",
-  "box-as-element": "src/registry/examples/primitives/box/as-element.tsx",
+  try {
+    // Get all categories (components, primitives, etc.)
+    const categories = await fs.readdir(examplesRoot, { withFileTypes: true })
+
+    for (const category of categories) {
+      if (!category.isDirectory()) continue
+
+      const categoryPath = path.join(examplesRoot, category.name)
+
+      // Get all components in this category
+      const components = await fs.readdir(categoryPath, { withFileTypes: true })
+
+      for (const component of components) {
+        if (!component.isDirectory()) continue
+
+        const componentPath = path.join(categoryPath, component.name)
+
+        // Get all example files for this component
+        const examples = await fs.readdir(componentPath, {
+          withFileTypes: true,
+        })
+
+        for (const example of examples) {
+          if (!example.isFile() || !example.name.endsWith(".tsx")) continue
+
+          // Generate key: component-example (without .tsx extension)
+          const exampleName = example.name.replace(".tsx", "")
+          const key = `${component.name}-${exampleName}`
+
+          // Store relative path from project root
+          const relativePath = path.relative(
+            process.cwd(),
+            path.join(componentPath, example.name)
+          )
+
+          exampleFileMap[key] = relativePath
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error discovering examples:", error)
+  }
+
+  return exampleFileMap
 }
 
 async function buildExamples() {
   console.log("🔨 Building example code registry...")
+
+  // Discover all examples dynamically
+  const exampleFileMap = await discoverExamples()
+
+  console.log(`🔍 Discovered ${Object.keys(exampleFileMap).length} examples:`)
+  for (const [key, filePath] of Object.entries(exampleFileMap)) {
+    console.log(`  - ${key}: ${filePath}`)
+  }
 
   const exampleCodeMap: Record<string, string> = {}
 
@@ -58,6 +105,8 @@ export function getExampleCode(
 
   console.log("✅ Example code registry built successfully!")
   console.log(`📝 Generated ${Object.keys(exampleCodeMap).length} examples`)
+
+  return exampleFileMap
 }
 
 // Handle CLI arguments
@@ -66,21 +115,36 @@ const isWatchMode = process.argv.includes("--watch")
 if (isWatchMode) {
   console.log("👀 Watching for changes in example files...")
 
-  // Build initially
-  buildExamples().catch(console.error)
+  // Build initially and get the file paths
+  let currentExampleFileMap: Record<string, string> = {}
 
-  // Watch for changes
-  const examplePaths = Object.values(exampleFileMap).map((filePath) =>
-    path.join(process.cwd(), filePath)
-  )
+  buildExamples()
+    .then((fileMap) => {
+      currentExampleFileMap = fileMap
+      setupWatchers()
+    })
+    .catch(console.error)
 
-  for (const filePath of examplePaths) {
-    watch(filePath, async (eventType) => {
-      if (eventType === "change") {
-        console.log(
-          `📝 File changed: ${path.relative(process.cwd(), filePath)}`
+  async function setupWatchers() {
+    // Watch the examples directory for new files/folders
+    const examplesRoot = path.join(process.cwd(), "src/registry/examples")
+
+    watch(examplesRoot, { recursive: true }, async (eventType, filename) => {
+      if (filename && filename.endsWith(".tsx")) {
+        console.log(`📝 Example file changed: ${filename}`)
+
+        // Rebuild and update watchers if new files are discovered
+        const newFileMap = await buildExamples()
+
+        // Check if we have new files that need watching
+        const newFiles = Object.keys(newFileMap).filter(
+          (key) => !Object.keys(currentExampleFileMap).includes(key)
         )
-        await buildExamples()
+
+        if (newFiles.length > 0) {
+          console.log(`🆕 Discovered ${newFiles.length} new example(s)`)
+          currentExampleFileMap = newFileMap
+        }
       }
     })
   }
