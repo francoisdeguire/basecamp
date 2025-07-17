@@ -20,12 +20,14 @@ export function PropsTable({ name, propsData }: PropsTableProps) {
   return (
     <div className="border rounded-lg overflow-hidden">
       <table className="w-full">
-        <thead className="bg-gray-50">
+        <thead className="bg-muted/50">
           <tr>
-            <th className="text-left p-3 font-medium text-gray-900">Prop</th>
-            <th className="text-left p-3 font-medium text-gray-900">Type</th>
-            <th className="text-left p-3 font-medium text-gray-900">Default</th>
-            <th className="text-left p-3 font-medium text-gray-900">
+            <th className="text-left p-3 font-medium text-foreground">Prop</th>
+            <th className="text-left p-3 font-medium text-foreground">Type</th>
+            <th className="text-left p-3 font-medium text-foreground">
+              Default
+            </th>
+            <th className="text-left p-3 font-medium text-foreground">
               Description
             </th>
           </tr>
@@ -33,14 +35,14 @@ export function PropsTable({ name, propsData }: PropsTableProps) {
         <tbody>
           {Object.entries(propsData).map(([propName, prop], index) => (
             <tr key={index} className="border-t">
-              <td className="p-3 font-mono text-sm text-blue-600">
-                {propName}
-              </td>
-              <td className="p-3 text-sm text-gray-700">{prop.type}</td>
-              <td className="p-3 text-sm text-gray-500">
+              <td className="p-3 font-mono text-sm text-primary">{propName}</td>
+              <td className="p-3 text-sm text-foreground">{prop.type}</td>
+              <td className="p-3 text-sm text-muted-foreground">
                 {prop.default !== undefined ? prop.default : "-"}
               </td>
-              <td className="p-3 text-sm text-gray-700">{prop.description}</td>
+              <td className="p-3 text-sm text-foreground">
+                {prop.description}
+              </td>
             </tr>
           ))}
         </tbody>

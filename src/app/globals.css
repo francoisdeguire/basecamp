@@ -125,20 +125,25 @@
   @apply border-border;
 }
 body {
-  @apply bg-white text-foreground;
+  @apply bg-background text-foreground;
 }
 
-/* Syntax highlighting for rehype-pretty-code */
-code[data-theme*=" "],
-code[data-theme*=" "] span {
-  color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
+/* Syntax highlighting for shiki - dual theme support */
+/* Light theme styles (already inline, but ensuring proper inheritance) */
+pre[style*="--shiki-light-bg"] {
+  background-color: var(--shiki-light-bg, #ffffff) !important;
 }
 
-@media (prefers-color-scheme: dark) {
-  code[data-theme*=" "],
-  code[data-theme*=" "] span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-  }
+span[style*="--shiki-light"] {
+  color: var(--shiki-light, inherit);
+}
+
+/* Dark theme overrides for code blocks */
+.dark pre[style*="--shiki-dark-bg"] {
+  background-color: var(--shiki-dark-bg) !important;
+  color: var(--shiki-dark) !important;
+}
+
+.dark span[style*="--shiki-dark"] {
+  color: var(--shiki-dark) !important;
 }

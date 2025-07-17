@@ -48,7 +48,11 @@ export function ComponentPreview({
         className={className}
         align={align}
         hideCode={hideCode}
-        component={<Component />}
+        component={
+          <div className="relative w-full h-full text-foreground bg-background">
+            <Component />
+          </div>
+        }
         source={<ComponentSource name={name} example={example} />}
         {...props}
       />
