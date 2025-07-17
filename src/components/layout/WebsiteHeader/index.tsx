@@ -7,6 +7,8 @@ import { Button } from "@/registry/ui/button"
 export function WebsiteHeader() {
   return (
     <header className="flex items-center gap-10 h-16 px-14 bg-white fixed top-0 left-0 right-0 z-10">
+      <div className="absolute bottom-0 left-0 right-0 h-8 translate-y-full bg-gradient-to-b from-white to-transparent" />
+
       <Link href="/" className="flex items-center gap-2.5 -mt-1">
         <Image priority src={logo} alt="basecamp logo" className="size-6" />
         <span className="text-2xl font-medium tracking-tighter mt-1">
@@ -14,7 +16,7 @@ export function WebsiteHeader() {
         </span>
       </Link>
 
-      <span className="h-5 w-px bg-gray-200" />
+      <span className="h-5 w-px bg-border" />
 
       <div className="flex items-center gap-1 -ml-3">
         <Button variant="ghost" size="sm" asChild>

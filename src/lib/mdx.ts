@@ -1,9 +1,6 @@
 import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
-import { serialize } from "next-mdx-remote/serialize"
-import { remark } from "remark"
-import html from "remark-html"
 import {
   ComponentFrontmatter,
   ComponentProp,
@@ -15,11 +12,13 @@ import { CONFIG } from "@/lib/config"
 export interface MDXContent {
   frontmatter: ComponentFrontmatter
   content: string
-  htmlContent: string
-  compiledSource: string
   validation: ValidationResult
 }
 
+/**
+ * Parse an MDX file and extract frontmatter and content
+ * Compatible with next-mdx-remote-client for direct rendering
+ */
 export async function parseMDXFile(
   filePath: string
 ): Promise<MDXContent | null> {
@@ -49,21 +48,9 @@ export async function parseMDXFile(
       return null
     }
 
-    // Convert markdown to HTML
-    const htmlContent = await remark().use(html).process(content)
-
-    // Serialize MDX content
-    const compiledSource = await serialize(content, {
-      mdxOptions: {
-        development: process.env.NODE_ENV === "development",
-      },
-    })
-
     return {
       frontmatter: data as ComponentFrontmatter,
       content,
-      htmlContent: String(htmlContent),
-      compiledSource: compiledSource.compiledSource,
       validation,
     }
   } catch (error) {
@@ -72,10 +59,18 @@ export async function parseMDXFile(
   }
 }
 
+/**
+ * Recursively find all MDX files in a directory
+ */
 export function findMDXFiles(directory: string): string[] {
   const mdxFiles: string[] = []
 
   try {
+    if (!fs.existsSync(directory)) {
+      console.warn(`Directory ${directory} does not exist`)
+      return mdxFiles
+    }
+
     const items = fs.readdirSync(directory, { withFileTypes: true })
 
     for (const item of items) {

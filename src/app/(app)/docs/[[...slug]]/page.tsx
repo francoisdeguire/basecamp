@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
-import { MDXRemote } from "next-mdx-remote/rsc"
+import { MDXRemote } from "next-mdx-remote-client/rsc"
+import type { MDXComponents } from "mdx/types"
 import { parseMDXFile, getComponentProps } from "@/lib/mdx"
 import { extractTocFromMdx } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
@@ -12,11 +13,10 @@ import { DashboardTableOfContents } from "@/components/layout/TOC"
 import { mdxComponents } from "@/mdx-components"
 
 // Enhanced MDX components with copy button functionality
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const components: any = {
+const components = {
   ...mdxComponents,
   ComponentPreview,
-}
+} as MDXComponents
 
 interface PageProps {
   params: Promise<{ slug?: string[] }>
@@ -35,7 +35,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
         "A collection of reusable UI components for your applications.",
       slug: "/docs/components",
       slugAsParams: "components",
-      body: { raw: "", code: "" },
+      body: { raw: "", content: "" },
       frontmatter: { title: "Components", description: "UI Components" },
       path: "",
       type: "components-listing" as const,
@@ -51,7 +51,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
         "Basic building blocks for creating more complex components.",
       slug: "/docs/primitives",
       slugAsParams: "primitives",
-      body: { raw: "", code: "" },
+      body: { raw: "", content: "" },
       frontmatter: { title: "Primitives", description: "Primitives" },
       path: "",
       type: "primitives-listing" as const,
@@ -79,7 +79,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
       description: mdxContent.frontmatter.description,
       slug: targetSlug ? `/docs/${targetSlug}` : "",
       slugAsParams: targetSlug,
-      body: { raw: mdxContent.content, code: mdxContent.content },
+      body: { raw: mdxContent.content, content: mdxContent.content },
       frontmatter: mdxContent.frontmatter,
       path: rootPage.path,
       type: "page" as const,
@@ -114,7 +114,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
     description: component.frontmatter.description,
     slug: `/docs/${category}/${componentName}`,
     slugAsParams: `${category}/${componentName}`,
-    body: { raw: mdxContent.content, code: mdxContent.content },
+    body: { raw: mdxContent.content, content: mdxContent.content },
     frontmatter: component.frontmatter,
     path: component.path,
     type: category as "components" | "primitives",
@@ -122,63 +122,21 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
   }
 }
 
-// Generate metadata for SEO (like shadcn-ui)
+// Generate metadata for the page
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ slug?: string[] }>
-}): Promise<Metadata> {
+}: PageProps): Promise<Metadata> {
   const resolvedParams = await params
   const doc = await getDocFromParams({ params: resolvedParams })
 
   if (!doc) {
-    return {
-      title: "Documentation",
-      description: "Basecamp documentation",
-    }
+    return {}
   }
 
   return {
     title: doc.title,
     description: doc.description,
-    openGraph: {
-      title: doc.title,
-      description: doc.description,
-      type: "article",
-      url: `https://yourdomain.com${doc.slug}`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: doc.title,
-      description: doc.description,
-    },
   }
-}
-
-// Generate static params for better performance (like shadcn-ui)
-export async function generateStaticParams() {
-  const registry = await buildRegistry()
-  const rootPages = getRootPages()
-
-  const params = [
-    // Root docs pages (including index and any additional pages)
-    ...rootPages.map((page) => ({
-      slug: page.slug ? [page.slug] : [],
-    })),
-    // Category listing pages
-    { slug: ["components"] },
-    { slug: ["primitives"] },
-    // Component pages
-    ...registry.components.map((component) => ({
-      slug: ["components", component.slug],
-    })),
-    // Primitive pages
-    ...registry.primitives.map((primitive) => ({
-      slug: ["primitives", primitive.slug],
-    })),
-  ]
-
-  return params
 }
 
 export default async function DocPage({ params }: PageProps) {
@@ -210,7 +168,7 @@ export default async function DocPage({ params }: PageProps) {
   const customComponents = {
     ...components,
     PropsTable: CustomPropsTable,
-  }
+  } as MDXComponents
 
   // Handle category listing pages
   if (doc.type === "components-listing" || doc.type === "primitives-listing") {
@@ -266,7 +224,7 @@ export default async function DocPage({ params }: PageProps) {
 
         {/* Content */}
         <div className="prose max-w-none">
-          <MDXRemote source={doc.body.code} components={customComponents} />
+          <MDXRemote source={doc.body.content} components={customComponents} />
         </div>
       </main>
 

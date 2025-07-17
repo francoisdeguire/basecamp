@@ -1,38 +1,36 @@
 import type { NextConfig } from "next"
+import createMDX from "@next/mdx"
+import remarkGfm from "remark-gfm"
+import rehypeSlug from "rehype-slug"
+import rehypePrettyCode from "rehype-pretty-code"
 
 const nextConfig: NextConfig = {
-  // Configure Turbopack (stable API)
-  turbopack: {
-    rules: {
-      // Configure MDX handling for Turbopack
-      "*.mdx": {
-        loaders: ["@mdx-js/loader"],
-        as: "*.jsx",
-      },
-    },
-    // Performance optimizations
-    resolveAlias: {
-      // Add any custom aliases here if needed
-    },
-  },
-  // Keep webpack config as fallback for production builds
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.mdx?$/,
-      use: [
-        {
-          loader: "@mdx-js/loader",
-          options: {
-            providerImportSource: "@mdx-js/react",
-          },
-        },
-      ],
-    })
-    return config
-  },
+  // Configure page extensions to include MDX
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+
+  // Enable experimental mdxRs for better performance
   experimental: {
     mdxRs: true,
   },
 }
 
-export default nextConfig
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [remarkGfm],
+    rehypePlugins: [
+      rehypeSlug,
+      [
+        rehypePrettyCode,
+        {
+          theme: {
+            dark: "github-dark",
+            light: "github-light",
+          },
+          defaultLang: "tsx",
+        },
+      ],
+    ],
+  },
+})
+
+export default withMDX(nextConfig)
