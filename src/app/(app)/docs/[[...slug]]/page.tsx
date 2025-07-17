@@ -1,7 +1,11 @@
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote-client/rsc"
 import type { MDXComponents } from "mdx/types"
-import { parseMDXFile, getComponentProps } from "@/lib/mdx"
+import {
+  parseMDXFile,
+  getComponentProps,
+  rehypePrettyCodeOptions,
+} from "@/lib/mdx"
 import { extractTocFromMdx } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
@@ -11,6 +15,9 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { DashboardTableOfContents } from "@/components/layout/TOC"
 import { mdxComponents } from "@/mdx-components"
+// Try different import format
+import rehypePrettyCode from "rehype-pretty-code"
+import rehypeSlug from "rehype-slug"
 
 // Enhanced MDX components with copy button functionality
 const components = {
@@ -224,7 +231,18 @@ export default async function DocPage({ params }: PageProps) {
 
         {/* Content */}
         <div className="prose max-w-none">
-          <MDXRemote source={doc.body.content} components={customComponents} />
+          <MDXRemote
+            source={doc.body.content}
+            components={customComponents}
+            options={{
+              mdxOptions: {
+                rehypePlugins: [
+                  [rehypePrettyCode, rehypePrettyCodeOptions],
+                  [rehypeSlug],
+                ],
+              },
+            }}
+          />
         </div>
       </main>
 

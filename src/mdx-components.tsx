@@ -157,7 +157,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
           return children
         }
         if (React.isValidElement(children)) {
-          const childProps = children.props as { children?: React.ReactNode }
+          const childProps = children.props as {
+            children?: React.ReactNode
+            __raw__?: string
+          }
+          // Check for raw text from rehype-pretty-code
+          if (childProps.__raw__) {
+            return childProps.__raw__
+          }
           if (childProps.children) {
             return extractTextFromChildren(childProps.children)
           }
@@ -175,7 +182,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
           {rawText && <CopyButton value={rawText} />}
           <pre
             className={cn(
-              "no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0 bg-muted rounded-md",
+              "no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none bg-muted rounded-md",
+              // Handle rehype-pretty-code classes
+              "[&_code]:bg-transparent [&_code]:p-0",
               className
             )}
             {...props}
@@ -206,8 +215,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       )
     }) as any,
     code: (({ className, ...props }: React.ComponentProps<"code">) => {
-      // Inline Code - when used outside of pre tags
-      if (typeof props.children === "string") {
+      // Check if this is inside a pre tag (code block) or standalone (inline code)
+      const isInlineCode =
+        typeof props.children === "string" && !className?.includes("language-")
+
+      if (isInlineCode) {
+        // Inline Code - when used outside of pre tags
         return (
           <code
             className={cn(
@@ -219,8 +232,18 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         )
       }
 
-      // Code block content - when used inside pre tags
-      return <code className={cn("font-mono text-sm", className)} {...props} />
+      // Code block content - when used inside pre tags or highlighted by rehype-pretty-code
+      return (
+        <code
+          className={cn(
+            "font-mono text-sm",
+            // Ensure proper styling for highlighted code
+            "[&_span]:font-mono",
+            className
+          )}
+          {...props}
+        />
+      )
     }) as any,
     Step: (({ className, ...props }: React.ComponentProps<"h3">) => (
       <h3
@@ -408,7 +431,13 @@ export const mdxComponents = {
         return children
       }
       if (React.isValidElement(children)) {
-        const childProps = children.props as { children?: React.ReactNode }
+        const childProps = children.props as {
+          children?: React.ReactNode
+          __raw__?: string
+        }
+        if (childProps.__raw__) {
+          return childProps.__raw__
+        }
         if (childProps.children) {
           return extractTextFromChildren(childProps.children)
         }
@@ -426,7 +455,9 @@ export const mdxComponents = {
         {rawText && <CopyButton value={rawText} />}
         <pre
           className={cn(
-            "no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none has-[[data-highlighted-line]]:px-0 has-[[data-line-numbers]]:px-0 has-[[data-slot=tabs]]:p-0 bg-muted rounded-md",
+            "no-scrollbar min-w-0 overflow-x-auto px-4 py-3.5 outline-none bg-muted rounded-md",
+            // Handle rehype-pretty-code classes
+            "[&_code]:bg-transparent [&_code]:p-0",
             className
           )}
           {...props}
@@ -457,8 +488,12 @@ export const mdxComponents = {
     )
   },
   code: ({ className, ...props }: React.ComponentProps<"code">) => {
-    // Inline Code - when used outside of pre tags
-    if (typeof props.children === "string") {
+    // Check if this is inside a pre tag (code block) or standalone (inline code)
+    const isInlineCode =
+      typeof props.children === "string" && !className?.includes("language-")
+
+    if (isInlineCode) {
+      // Inline Code - when used outside of pre tags
       return (
         <code
           className={cn(
@@ -470,8 +505,18 @@ export const mdxComponents = {
       )
     }
 
-    // Code block content - when used inside pre tags
-    return <code className={cn("font-mono text-sm", className)} {...props} />
+    // Code block content - when used inside pre tags or highlighted by rehype-pretty-code
+    return (
+      <code
+        className={cn(
+          "font-mono text-sm",
+          // Ensure proper styling for highlighted code
+          "[&_span]:font-mono",
+          className
+        )}
+        {...props}
+      />
+    )
   },
   Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
     <h3

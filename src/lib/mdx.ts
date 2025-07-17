@@ -9,6 +9,22 @@ import {
 import { validateFrontmatter } from "@/lib/doc-utils"
 import { CONFIG } from "@/lib/config"
 
+// rehype-pretty-code configuration
+export const rehypePrettyCodeOptions = {
+  theme: {
+    dark: "min-dark",
+    light: "min-light",
+  },
+  defaultLang: {
+    block: "tsx",
+    inline: "tsx",
+  },
+  // Keep background transparent to match existing styling
+  keepBackground: false,
+  // Add line numbers for code blocks
+  grid: false, // We'll handle line numbers in CSS if needed
+}
+
 export interface MDXContent {
   frontmatter: ComponentFrontmatter
   content: string
