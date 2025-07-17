@@ -2,17 +2,15 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Tabs, TabList, Tab } from "@/registry/ui/tabs"
+import { Tabs, TabList, Tab } from "react-aria-components"
 
 export function ComponentPreviewTabs({
   className,
-  align = "center",
   hideCode = false,
   component,
   source,
   ...props
 }: React.ComponentProps<"div"> & {
-  align?: "center" | "start" | "end"
   hideCode?: boolean
   component: React.ReactNode
   source: React.ReactNode
@@ -31,11 +29,17 @@ export function ComponentPreviewTabs({
       >
         <div className="flex items-center justify-between">
           {!hideCode && (
-            <TabList className="justify-start gap-4 rounded-none bg-transparent px-2 md:px-0">
-              <Tab id="preview" variant="underline" className="text-base">
+            <TabList className="flex gap-4">
+              <Tab
+                id="preview"
+                className="text-base font-medium select-none text-muted-foreground selected:text-foreground selected:cursor-auto cursor-pointer"
+              >
                 Preview
               </Tab>
-              <Tab id="code" variant="underline" className="text-base">
+              <Tab
+                id="code"
+                className="text-base font-medium select-none text-muted-foreground selected:text-foreground selected:cursor-auto cursor-pointer"
+              >
                 Code
               </Tab>
             </TabList>
@@ -44,26 +48,19 @@ export function ComponentPreviewTabs({
       </Tabs>
       <div
         data-tab={tab}
-        className="data-[tab=code]:border-code relative rounded-lg border md:-mx-1"
+        className="data-[tab=code]:border-code relative md:-mx-1.5"
       >
         <div
           data-slot="preview"
           data-active={tab === "preview"}
-          className="invisible data-[active=true]:visible"
+          className="invisible data-[active=true]:visible flex h-[450px] border rounded-lg w-full items-center justify-center p-8"
         >
-          <div
-            data-align={align}
-            className={cn(
-              "preview flex h-[450px] w-full justify-center p-10 bg-background text-foreground data-[align=center]:items-center data-[align=end]:items-end data-[align=start]:items-start"
-            )}
-          >
-            {component}
-          </div>
+          {component}
         </div>
         <div
           data-slot="code"
           data-active={tab === "code"}
-          className="absolute inset-0 hidden overflow-hidden data-[active=true]:block **:[figure]:!m-0 **:[pre]:h-[450px]"
+          className="absolute inset-0 hidden overflow-hidden rounded-lg bg-muted data-[active=true]:block **:[figure]:!m-0 **:[pre]:h-[450px]"
         >
           {source}
         </div>

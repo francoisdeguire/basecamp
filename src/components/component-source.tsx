@@ -1,6 +1,7 @@
 import { getExampleCode, getExampleHighlightedCode } from "@/lib/code-extractor"
 import { cn } from "@/lib/utils"
 import { CopyButton } from "@/components/copy-button"
+import { FolderIcon } from "lucide-react"
 
 interface ComponentSourceProps {
   name?: string
@@ -8,6 +9,13 @@ interface ComponentSourceProps {
   src?: string
   title?: string
   className?: string
+}
+
+/**
+ * Processes code by replacing registry imports for display purposes
+ */
+function processCode(code: string): string {
+  return code.replace(/@\/registry\/ui\//g, "@/components/ui/")
 }
 
 export function ComponentSource({
@@ -26,8 +34,14 @@ export function ComponentSource({
 
   if (name && example) {
     // Use pre-highlighted code from build system
-    code = getExampleCode(name, example)
-    highlightedCode = getExampleHighlightedCode(name, example)
+    const rawCode = getExampleCode(name, example)
+    const rawHighlightedCode = getExampleHighlightedCode(name, example)
+
+    // Process code for display
+    code = rawCode ? processCode(rawCode) : undefined
+    highlightedCode = rawHighlightedCode
+      ? processCode(rawHighlightedCode)
+      : undefined
   }
 
   // TODO: Handle src prop if needed (would require different approach)
@@ -88,30 +102,18 @@ function ComponentCode({
   title: string
 }) {
   return (
-    <figure className="relative overflow-hidden rounded-md bg-background">
-      <figcaption className="flex items-center justify-between border-b bg-muted/50 px-4 py-3">
-        <div className="flex items-center gap-2 text-sm font-medium">
-          <FileIcon />
+    <figure className="relative overflow-hidden rounded-md">
+      <figcaption className="flex items-center justify-between border-b px-4 py-3">
+        <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+          <FolderIcon className="size-4 " />
           {title}
         </div>
-        <CopyButton value={code} />
+        <CopyButton value={code} className="-mt-1" />
       </figcaption>
 
       <div className="[&>pre]:max-h-[350px] [&>pre]:overflow-auto [&>pre]:!bg-transparent [&>pre]:p-4 [&_code]:text-sm">
         <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
       </div>
     </figure>
-  )
-}
-
-function FileIcon() {
-  return (
-    <svg
-      className="h-4 w-4 text-blue-500"
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path d="M12 2l3 3h5v14a2 2 0 01-2 2H6a2 2 0 01-2-2V4a2 2 0 012-2h6z" />
-    </svg>
   )
 }

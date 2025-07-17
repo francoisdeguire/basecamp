@@ -3,6 +3,13 @@ import path from "path"
 import { CONFIG } from "../src/lib/config"
 import { highlightCode } from "../src/lib/highlight-code"
 
+/**
+ * Removes trailing whitespace and empty lines from code
+ */
+function trimCodeForDisplay(code: string): string {
+  return code.replace(/\s+$/, "")
+}
+
 // Dynamic example discovery
 async function discoverExamples(): Promise<Record<string, string>> {
   const exampleFileMap: Record<string, string> = {}
@@ -74,7 +81,10 @@ async function buildExamples() {
   for (const [key, filePath] of Object.entries(exampleFileMap)) {
     try {
       const fullPath = path.join(CONFIG.ROOT_DIR, filePath)
-      const content = await fs.readFile(fullPath, "utf-8")
+      const rawContent = await fs.readFile(fullPath, "utf-8")
+
+      // Trim trailing whitespace for cleaner display
+      const content = trimCodeForDisplay(rawContent)
       exampleCodeMap[key] = content
 
       // Pre-highlight the code

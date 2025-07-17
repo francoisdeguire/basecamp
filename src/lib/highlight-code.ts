@@ -70,33 +70,45 @@ export async function highlightCode(code: string, language: string = "tsx") {
       },
       transformers: [
         ...transformers,
-        {
-          pre(node) {
-            node.properties["class"] =
-              "no-scrollbar relative min-w-0 overflow-x-auto py-3 outline-none !bg-transparent"
-          },
-          code(node) {
-            node.properties["data-line-numbers"] = ""
-            node.properties["class"] = "grid"
-          },
-          line(node, line) {
-            node.properties["data-line"] = ""
-            node.properties["class"] = "px-4"
+        (() => {
+          // Calculate total lines for width determination
+          const totalLines = code.split("\n").length
+          let lineNumberWidth = "2ch"
+          if (totalLines >= 1000) {
+            lineNumberWidth = "4ch"
+          } else if (totalLines >= 100) {
+            lineNumberWidth = "3ch"
+          }
 
-            // Add line numbers
-            const lineNumber = line
-            node.children.unshift({
-              type: "element",
-              tagName: "span",
-              properties: {
-                class:
-                  "mr-4 inline-block w-8 text-right text-muted-foreground/60 select-none",
-                "data-line-number": lineNumber,
-              },
-              children: [{ type: "text", value: String(lineNumber) }],
-            })
-          },
-        },
+          return {
+            pre(node) {
+              node.properties["class"] =
+                "no-scrollbar relative min-w-0 overflow-x-auto py-3 outline-none !bg-transparent"
+            },
+            code(node) {
+              node.properties["data-line-numbers"] = ""
+              node.properties["class"] = "grid"
+            },
+            line(node, line) {
+              node.properties["data-line"] = ""
+              node.properties["class"] = "px-4"
+
+              // Add line numbers
+              const lineNumber = line
+              node.children.unshift({
+                type: "element",
+                tagName: "span",
+                properties: {
+                  class:
+                    "mr-4 inline-block text-right text-muted-foreground/60 select-none",
+                  style: `width: ${lineNumberWidth}`,
+                  "data-line-number": lineNumber,
+                },
+                children: [{ type: "text", value: String(lineNumber) }],
+              })
+            },
+          }
+        })(),
       ],
     })
 

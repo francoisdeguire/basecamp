@@ -6,6 +6,8 @@ export interface TooltipTriggerProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode
   delay?: number
   closeDelay?: number
+  isOpen?: boolean
+  onOpenChange?: (isOpen: boolean) => void
 }
 
 export interface TooltipProps

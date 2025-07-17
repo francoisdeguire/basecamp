@@ -218,19 +218,21 @@ export default async function DocPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-1">
-      <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-8">
+      <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-12">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">
+        <div className="space-y-4 mt-1.5">
+          <h1 className="scroll-m-20 text-4xl font-medium tracking-tighter">
             {doc.title}
           </h1>
           {doc.description && (
-            <p className="text-base text-muted-foreground">{doc.description}</p>
+            <p className="text-base font-medium text-balance text-muted-foreground">
+              {doc.description}
+            </p>
           )}
         </div>
 
         {/* Content */}
-        <div className="prose max-w-none">
+        <div className="prose max-w-none space-y-8">
           <MDXRemote
             source={doc.body.content}
             components={customComponents}

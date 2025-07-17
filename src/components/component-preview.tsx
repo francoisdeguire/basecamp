@@ -4,19 +4,17 @@ import { ComponentPreviewTabs } from "@/components/component-preview-tabs"
 import { dynamicImportMap } from "@/lib/dynamic-imports"
 
 export function ComponentPreview({
-  name,
+  component,
   example,
   className,
-  align = "center",
   hideCode = false,
   ...props
 }: React.ComponentProps<"div"> & {
-  name: string
+  component: string
   example: string
-  align?: "center" | "start" | "end"
   hideCode?: boolean
 }) {
-  const key = `${name}-${example}`
+  const key = `${component}-${example}`
   const importFn = dynamicImportMap[key]
 
   if (!importFn) {
@@ -24,14 +22,30 @@ export function ComponentPreview({
       <p className="text-muted-foreground text-sm">
         Component{" "}
         <code className="bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm">
-          {name}
+          {component}
         </code>{" "}
         example &quot;{example}&quot; not found in registry.
       </p>
     )
   }
 
-  const Component = React.lazy(importFn)
+  // Handle named exports by dynamically extracting the component
+  const Component = React.lazy(async () => {
+    const importedModule = await importFn()
+    // Find the first export that's a component (capitalized function)
+    const exportedComponent = Object.values(importedModule).find(
+      (exp): exp is React.ComponentType =>
+        typeof exp === "function" &&
+        typeof exp.name === "string" &&
+        /^[A-Z]/.test(exp.name)
+    )
+
+    if (!exportedComponent) {
+      throw new Error(`No valid component export found in ${key}`)
+    }
+
+    return { default: exportedComponent }
+  })
 
   return (
     <React.Suspense
@@ -46,14 +60,9 @@ export function ComponentPreview({
     >
       <ComponentPreviewTabs
         className={className}
-        align={align}
         hideCode={hideCode}
-        component={
-          <div className="relative w-full h-full text-foreground bg-background">
-            <Component />
-          </div>
-        }
-        source={<ComponentSource name={name} example={example} />}
+        component={<Component />}
+        source={<ComponentSource name={component} example={example} />}
         {...props}
       />
     </React.Suspense>

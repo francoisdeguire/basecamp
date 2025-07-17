@@ -8,6 +8,7 @@ export const dynamicImportMap: Record<
   () => Promise<{ default: ComponentType }>
 > = {
   "button-basic": () => import("@/registry/examples/components/button/basic"),
+  "button-demo": () => import("@/registry/examples/components/button/demo"),
   "button-sizes": () => import("@/registry/examples/components/button/sizes"),
   "button-variants": () => import("@/registry/examples/components/button/variants"),
   "tabs-basic": () => import("@/registry/examples/components/tabs/basic"),
@@ -20,7 +21,7 @@ export const dynamicImportMap: Record<
 
 // Generate component examples map from discovered files
 export const componentExamplesMap: Record<string, string[]> = {
-  "button": ["basic","sizes","variants"],
+  "button": ["basic","demo","sizes","variants"],
   "tabs": ["basic"],
   "tooltip": ["basic","sizes","variants"],
   "box": ["as-element","basic"],

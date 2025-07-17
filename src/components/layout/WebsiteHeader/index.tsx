@@ -35,6 +35,9 @@ export function WebsiteHeader() {
       <div className="ml-auto">
         <ThemeSwitcher />
       </div>
+
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-[#FF5258]/80" />
+      <div className="hidden dark:block absolute top-0.5 left-0 right-0 h-3 bg-gradient-to-b from-[#FF5258]/30 to-transparent" />
     </header>
   )
 }

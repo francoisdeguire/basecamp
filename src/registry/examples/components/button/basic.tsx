@@ -1,6 +1,6 @@
 import { Button } from "@/registry/ui/button"
 
-export default function BasicExample() {
+export function BasicExample() {
   return (
     <div className="flex gap-4">
       <Button>Default Button</Button>
