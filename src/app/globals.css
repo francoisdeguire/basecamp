@@ -124,8 +124,18 @@
 * {
   @apply border-border;
 }
+
 body {
   @apply bg-background text-foreground;
+}
+
+@utility progressive-blur-mask-to-t {
+  mask: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.5) 20%,
+    rgba(0, 0, 0, 1) 100%
+  );
 }
 
 /* Syntax highlighting for shiki - dual theme support */

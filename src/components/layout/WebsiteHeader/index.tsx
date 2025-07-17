@@ -7,8 +7,9 @@ import { ThemeSwitcher } from "@/components/theme-switcher"
 
 export function WebsiteHeader() {
   return (
-    <header className="flex items-center gap-10 h-16 px-14 bg-background fixed top-0 left-0 right-0 z-10">
-      <div className="absolute bottom-0 left-0 right-0 h-8 translate-y-full bg-gradient-to-b from-background to-transparent" />
+    <header className="flex items-center gap-10 h-16 px-14 bg-background fixed top-0 left-0 right-0 z-50">
+      <div className="absolute bottom-0 left-0 right-0 h-8 translate-y-full backdrop-blur-[3px] progressive-blur-mask-to-t" />
+      <div className="absolute bottom-0 left-0 right-0 h-10 translate-y-full bg-gradient-to-b from-background via-background/50 via-60% to-transparent" />
 
       <Link href="/" className="flex items-center gap-2.5 -mt-1">
         <Image priority src={logo} alt="basecamp logo" className="size-6" />
