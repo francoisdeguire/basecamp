@@ -13,7 +13,7 @@ export const SidebarItem = ({
       <Button
         variant="ghost"
         size="sm"
-        className="data-[active=true]:bg-accent relative h-[30px] w-fit overflow-visible text-[0.8rem] font-medium"
+        className="relative h-[30px] w-fit overflow-visible text-[0.8rem] font-medium"
         asChild
       >
         <Link href={href}>{children}</Link>

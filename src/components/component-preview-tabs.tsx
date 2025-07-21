@@ -38,7 +38,7 @@ export function ComponentPreviewTabs({
               </Tab>
               <Tab
                 id="code"
-                className="text-base font-medium select-none text-muted-foreground selected:text-foreground selected:cursor-auto cursor-pointer"
+                className="text-base font-medium select-none text-muted-foreground selected:text-foreground selected:cursor-auto"
               >
                 Code
               </Tab>

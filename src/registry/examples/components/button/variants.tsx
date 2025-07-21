@@ -19,6 +19,28 @@ export function VariantsExample() {
           Ghost Disabled
         </Button>
       </div>
+      <div className="flex gap-4">
+        <Button variant="default" className="opacity-50 cursor-not-allowed">
+          Primary Disabled
+        </Button>
+        <Button variant="secondary" className="opacity-50 cursor-not-allowed">
+          Secondary Disabled
+        </Button>
+        <Button variant="ghost" className="opacity-50 cursor-not-allowed">
+          Ghost Disabled
+        </Button>
+      </div>
+      <div className="flex gap-4">
+        <Button variant="default" className="opacity-50 cursor-not-allowed">
+          Primary Disabled
+        </Button>
+        <Button variant="secondary" className="opacity-50 cursor-not-allowed">
+          Secondary Disabled
+        </Button>
+        <Button variant="ghost" className="opacity-50 cursor-not-allowed">
+          Ghost Disabled
+        </Button>
+      </div>
     </div>
   )
 }

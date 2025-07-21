@@ -21,7 +21,7 @@ export function DashboardTableOfContents({ toc }: TocProps) {
   }
 
   return (
-    <aside className="sticky top-16 w-64 max-h-screen overflow-y-auto pt-8 space-y-8">
+    <aside className="sticky top-16 w-64 max-h-screen overflow-y-auto pt-8 space-y-8 hidden xl:block">
       <div className="space-y-2 px-6">
         <p className="text-xs h-[30px] flex items-center text-muted-foreground select-none">
           On This Page

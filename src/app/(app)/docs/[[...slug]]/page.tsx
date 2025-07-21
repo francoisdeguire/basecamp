@@ -218,9 +218,9 @@ export default async function DocPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-1">
-      <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-12">
+      <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-16">
         {/* Header */}
-        <div className="space-y-4 mt-1.5">
+        <div className="space-y-2 mt-1.5">
           <h1 className="scroll-m-20 text-4xl font-medium tracking-tighter">
             {doc.title}
           </h1>

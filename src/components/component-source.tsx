@@ -1,7 +1,7 @@
 import { getExampleCode, getExampleHighlightedCode } from "@/lib/code-extractor"
 import { cn } from "@/lib/utils"
 import { CopyButton } from "@/components/copy-button"
-import { FolderIcon } from "lucide-react"
+import { FileIcon } from "lucide-react"
 
 interface ComponentSourceProps {
   name?: string
@@ -53,7 +53,7 @@ export function ComponentSource({
           className
         )}
       >
-        <div className="flex h-[200px] items-center justify-center">
+        <div className="flex h-[100px] items-center justify-center">
           <div className="text-sm text-destructive">
             Direct file loading not supported in server component
           </div>
@@ -70,7 +70,7 @@ export function ComponentSource({
           className
         )}
       >
-        <div className="flex h-[200px] items-center justify-center">
+        <div className="flex h-[100px] items-center justify-center">
           <div className="text-sm text-destructive">
             Code not found for {name}-{example}
           </div>
@@ -82,38 +82,19 @@ export function ComponentSource({
   const displayTitle = title || `${name}-${example}.tsx`
 
   return (
-    <div className={cn("relative", className)}>
-      <ComponentCode
-        code={code}
-        highlightedCode={highlightedCode}
-        title={displayTitle}
-      />
-    </div>
-  )
-}
-
-function ComponentCode({
-  code,
-  highlightedCode,
-  title,
-}: {
-  code: string
-  highlightedCode: string
-  title: string
-}) {
-  return (
-    <figure className="relative overflow-hidden rounded-md">
+    <figure className="flex h-full flex-col relative overflow-auto rounded-md">
       <figcaption className="flex items-center justify-between border-b px-4 py-3">
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <FolderIcon className="size-4 " />
-          {title}
+          <FileIcon className="size-4 " />
+          {displayTitle}
         </div>
         <CopyButton value={code} className="-mt-1" />
       </figcaption>
 
-      <div className="[&>pre]:max-h-[350px] [&>pre]:overflow-auto [&>pre]:!bg-transparent [&>pre]:p-4 [&_code]:text-sm">
-        <div dangerouslySetInnerHTML={{ __html: highlightedCode }} />
-      </div>
+      <div
+        className="flex-1 min-h-0 [&>pre]:!bg-transparent [&>pre]:p-4 [&_code]:text-sm [&>pre]:h-full"
+        dangerouslySetInnerHTML={{ __html: highlightedCode }}
+      />
     </figure>
   )
 }

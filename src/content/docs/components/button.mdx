@@ -4,11 +4,11 @@ description: A versatile button component that supports multiple variants and si
 examples: ["basic", "variants", "sizes"]
 props:
   variant:
-    type: "primary | secondary | ghost"
+    type: "<'primary' | 'secondary' | 'ghost'>"
     default: "primary"
     description: "The visual style of the button"
   size:
-    type: "sm | md | lg"
+    type: "<'sm' | 'md' | 'lg'>"
     default: "md"
     description: "The size of the button"
   children:
@@ -24,6 +24,40 @@ props:
 
 <ComponentPreview component="button" example="demo" />
 
+## Installation
+
+<CodeTabs>
+
+<CodeTabsContent id="cli">
+
+```bash
+npx shadcn@latest add avatar
+```
+
+</CodeTabsContent>
+
+<CodeTabsContent id="manual">
+
+<Steps>
+
+<Step>1. Install the following dependencies:</Step>
+
+```bash
+npm install @radix-ui/react-avatar
+```
+
+<Step>2. Copy and paste the following code into your project:</Step>
+
+<ComponentPreview component="button" example="variants" />
+
+<Step>3. Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</CodeTabsContent>
+
+</CodeTabs>
+
 ## Usage
 
 ```tsx
@@ -31,7 +65,7 @@ import { Button } from "@/components/ui/button"
 ```
 
 ```tsx
-<Button variant="outline">Button</Button>
+<Button variant="secondary">Button</Button>
 ```
 
 ## Examples
