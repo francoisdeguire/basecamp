@@ -5,7 +5,7 @@ import type { ComponentType } from "react"
 
 export const dynamicImportMap: Record<
   string,
-  () => Promise<{ default: ComponentType }>
+  () => Promise<Record<string, ComponentType>>
 > = {
   "button-basic": () => import("@/registry/examples/components/button/basic"),
   "button-demo": () => import("@/registry/examples/components/button/demo"),

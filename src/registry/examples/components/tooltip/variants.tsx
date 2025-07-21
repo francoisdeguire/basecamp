@@ -15,12 +15,12 @@ export default function VariantsExample() {
       </TooltipTrigger>
 
       <TooltipTrigger>
-        <Button variant="outline">Outline</Button>
-        <Tooltip variant="outline">Outline tooltip variant</Tooltip>
+        <Button variant="secondary">Secondary</Button>
+        <Tooltip variant="outline">Secondary tooltip variant</Tooltip>
       </TooltipTrigger>
 
       <TooltipTrigger>
-        <Button variant="destructive">Destructive</Button>
+        <Button variant="ghost">Ghost</Button>
         <Tooltip variant="destructive">
           Destructive tooltip variant for errors
         </Tooltip>

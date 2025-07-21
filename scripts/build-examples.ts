@@ -3,6 +3,17 @@ import path from "path"
 import { CONFIG } from "../src/lib/config"
 import { highlightCode } from "../src/lib/highlight-code"
 
+// Cache for file modification times to avoid re-processing unchanged files
+interface FileCache {
+  [filePath: string]: {
+    mtime: number
+    rawCode: string
+    highlightedCode: string
+  }
+}
+
+const fileCache: FileCache = {}
+
 /**
  * Removes trailing whitespace and empty lines from code
  */
@@ -15,6 +26,68 @@ function trimCodeForDisplay(code: string): string {
  */
 function processCodeForDisplay(code: string): string {
   return code.replace(/@\/registry\/ui\//g, "@/components/ui/")
+}
+
+/**
+ * Check if a file needs to be reprocessed based on modification time
+ */
+async function needsReprocessing(filePath: string): Promise<boolean> {
+  try {
+    const stats = await fs.stat(filePath)
+    const currentMtime = stats.mtime.getTime()
+    const cached = fileCache[filePath]
+
+    return !cached || cached.mtime !== currentMtime
+  } catch {
+    return true // File doesn't exist or error, needs processing
+  }
+}
+
+/**
+ * Process a single file with caching
+ */
+async function processFile(
+  filePath: string,
+  language: string
+): Promise<{ rawCode: string; highlightedCode: string }> {
+  const fullPath = path.join(CONFIG.ROOT_DIR, filePath)
+
+  // Check if we need to reprocess this file
+  if (!(await needsReprocessing(fullPath))) {
+    const cached = fileCache[fullPath]
+    return {
+      rawCode: cached.rawCode,
+      highlightedCode: cached.highlightedCode,
+    }
+  }
+
+  try {
+    const rawContent = await fs.readFile(fullPath, "utf-8")
+    const processedContent = processCodeForDisplay(rawContent)
+    const rawCode = trimCodeForDisplay(processedContent)
+
+    // Highlight the code
+    const highlightedCode = await highlightCode(rawCode, language)
+
+    // Cache the results with current modification time
+    const stats = await fs.stat(fullPath)
+    fileCache[fullPath] = {
+      mtime: stats.mtime.getTime(),
+      rawCode,
+      highlightedCode,
+    }
+
+    return { rawCode, highlightedCode }
+  } catch (error) {
+    console.warn(`⚠️  Could not process ${filePath}:`, error)
+    const errorCode = `// Error loading code from ${filePath}`
+    const errorHighlighted = `<pre><code>${errorCode}</code></pre>`
+
+    return {
+      rawCode: errorCode,
+      highlightedCode: errorHighlighted,
+    }
+  }
 }
 
 // Dynamic example discovery
@@ -114,145 +187,100 @@ async function discoverRegistryFiles(): Promise<Record<string, string>> {
   return registryFileMap
 }
 
-async function buildExamples() {
-  console.log("🔨 Building example code registry...")
+/**
+ * Process all example files and return combined maps
+ */
+async function processExamples(exampleFileMap: Record<string, string>) {
+  const combinedCodeMap: Record<string, string> = {}
+  const combinedHighlightedMap: Record<string, string> = {}
 
-  // Discover all examples dynamically
-  const exampleFileMap = await discoverExamples()
-
-  console.log(`🔍 Discovered ${Object.keys(exampleFileMap).length} examples:`)
+  console.log("✨ Processing example files...")
   for (const [key, filePath] of Object.entries(exampleFileMap)) {
-    console.log(`  - ${key}: ${filePath}`)
+    const { rawCode, highlightedCode } = await processFile(filePath, "tsx")
+
+    // Use "example:" prefix to distinguish from registry files
+    const prefixedKey = `example:${key}`
+    combinedCodeMap[prefixedKey] = rawCode
+    combinedHighlightedMap[prefixedKey] = highlightedCode
   }
 
-  // Discover all registry UI files
-  const registryFileMap = await discoverRegistryFiles()
+  return { combinedCodeMap, combinedHighlightedMap }
+}
 
-  console.log(
-    `🔍 Discovered ${Object.keys(registryFileMap).length} registry files:`
-  )
+/**
+ * Process all registry files and add to combined maps
+ */
+async function processRegistry(
+  registryFileMap: Record<string, string>,
+  combinedCodeMap: Record<string, string>,
+  combinedHighlightedMap: Record<string, string>
+) {
+  console.log("✨ Processing registry files...")
   for (const [key, filePath] of Object.entries(registryFileMap)) {
-    console.log(`  - ${key}: ${filePath}`)
-  }
-
-  const exampleCodeMap: Record<string, string> = {}
-  const exampleHighlightedMap: Record<string, string> = {}
-  const registryCodeMap: Record<string, string> = {}
-  const registryHighlightedMap: Record<string, string> = {}
-
-  // Read and highlight each example file
-  console.log("✨ Highlighting code examples...")
-  for (const [key, filePath] of Object.entries(exampleFileMap)) {
-    try {
-      const fullPath = path.join(CONFIG.ROOT_DIR, filePath)
-      const rawContent = await fs.readFile(fullPath, "utf-8")
-
-      // Trim trailing whitespace for cleaner display
-      const content = trimCodeForDisplay(rawContent)
-      exampleCodeMap[key] = content
-
-      // Pre-highlight the code
-      const highlighted = await highlightCode(content, "tsx")
-      exampleHighlightedMap[key] = highlighted
-    } catch (error) {
-      console.warn(`⚠️  Could not read ${filePath}:`, error)
-      exampleCodeMap[key] = `// Error loading code for ${key}`
-      exampleHighlightedMap[
-        key
-      ] = `<pre><code>// Error loading code for ${key}</code></pre>`
+    // Determine language from file extension
+    let language = "tsx"
+    if (filePath.endsWith(".ts")) {
+      language = "typescript"
+    } else if (filePath.endsWith(".css")) {
+      language = "css"
     }
+
+    const { rawCode, highlightedCode } = await processFile(filePath, language)
+
+    // Use "registry:" prefix to distinguish from example files
+    const prefixedKey = `registry:${key}`
+    combinedCodeMap[prefixedKey] = rawCode
+    combinedHighlightedMap[prefixedKey] = highlightedCode
   }
+}
 
-  // Read and highlight each registry file
-  console.log("✨ Highlighting registry files...")
-  for (const [key, filePath] of Object.entries(registryFileMap)) {
-    try {
-      const fullPath = path.join(CONFIG.ROOT_DIR, filePath)
-      const rawContent = await fs.readFile(fullPath, "utf-8")
+/**
+ * Generate the combined code map files
+ */
+function generateCombinedMapFiles(
+  combinedCodeMap: Record<string, string>,
+  combinedHighlightedMap: Record<string, string>
+) {
+  const codeMapFile = `// This file is auto-generated by scripts/build-examples.ts
+// Do not edit this file directly - edit the source files instead
 
-      // Process and trim content for display
-      const processedContent = processCodeForDisplay(rawContent)
-      const content = trimCodeForDisplay(processedContent)
-      registryCodeMap[key] = content
-
-      // Pre-highlight the code with appropriate language
-      let language = "tsx"
-      if (filePath.endsWith(".ts")) {
-        language = "typescript"
-      } else if (filePath.endsWith(".css")) {
-        language = "css"
-      }
-      const highlighted = await highlightCode(content, language)
-      registryHighlightedMap[key] = highlighted
-    } catch (error) {
-      console.warn(`⚠️  Could not read ${filePath}:`, error)
-      registryCodeMap[key] = `// Error loading code for ${key}`
-      registryHighlightedMap[
-        key
-      ] = `<pre><code>// Error loading code for ${key}</code></pre>`
-    }
-  }
-
-  // Generate the raw code map file
-  const rawCodeMapFile = `// This file is auto-generated by scripts/build-examples.ts
-// Do not edit this file directly - edit the example files instead
-
-export const exampleCodeMap: Record<string, string> = {
-${Object.entries(exampleCodeMap)
+export const codeMap: Record<string, string> = {
+${Object.entries(combinedCodeMap)
   .map(([key, code]) => `  "${key}": ${JSON.stringify(code)},`)
   .join("\n")}
 }
 `
 
-  // Generate the highlighted code map file
-  const highlightedCodeMapFile = `// This file is auto-generated by scripts/build-examples.ts
-// Do not edit this file directly - edit the example files instead
+  const highlightedMapFile = `// This file is auto-generated by scripts/build-examples.ts
+// Do not edit this file directly - edit the source files instead
 
-export const exampleHighlightedMap: Record<string, string> = {
-${Object.entries(exampleHighlightedMap)
+export const highlightedMap: Record<string, string> = {
+${Object.entries(combinedHighlightedMap)
   .map(([key, html]) => `  "${key}": ${JSON.stringify(html)},`)
   .join("\n")}
 }
 `
 
-  // Generate the registry code map file
-  const registryCodeMapFile = `// This file is auto-generated by scripts/build-examples.ts
-// Do not edit this file directly - edit the registry files instead
-
-export const registryCodeMap: Record<string, string> = {
-${Object.entries(registryCodeMap)
-  .map(([key, code]) => `  "${key}": ${JSON.stringify(code)},`)
-  .join("\n")}
+  return { codeMapFile, highlightedMapFile }
 }
-`
 
-  // Generate the registry highlighted code map file
-  const registryHighlightedCodeMapFile = `// This file is auto-generated by scripts/build-examples.ts
-// Do not edit this file directly - edit the registry files instead
+/**
+ * Generate the updated code-extractor.ts file
+ */
+function generateCodeExtractorFile() {
+  return `// This file is auto-generated by scripts/build-examples.ts
+// Do not edit this file directly - edit the source files instead
 
-export const registryHighlightedMap: Record<string, string> = {
-${Object.entries(registryHighlightedMap)
-  .map(([key, html]) => `  "${key}": ${JSON.stringify(html)},`)
-  .join("\n")}
-}
-`
-
-  // Generate the updated code-extractor.ts file
-  const codeExtractorFile = `// This file is auto-generated by scripts/build-examples.ts
-// Do not edit this file directly - edit the example files instead
-
-import { exampleCodeMap } from "@/generated/example-code-map"
-import { exampleHighlightedMap } from "@/generated/example-highlighted-map"
-import { registryCodeMap } from "@/generated/registry-code-map"
-import { registryHighlightedMap } from "@/generated/registry-highlighted-map"
+import { codeMap } from "@/generated/code-map"
+import { highlightedMap } from "@/generated/highlighted-map"
 
 export function getExampleCode(
   componentName: string,
   exampleName: string
 ): string {
-  const key = \`\${componentName}-\${exampleName}\`
+  const key = \`example:\${componentName}-\${exampleName}\`
   return (
-    exampleCodeMap[key] ||
+    codeMap[key] ||
     \`// No code available for \${componentName}/\${exampleName}\`
   )
 }
@@ -261,29 +289,63 @@ export function getExampleHighlightedCode(
   componentName: string,
   exampleName: string
 ): string {
-  const key = \`\${componentName}-\${exampleName}\`
+  const key = \`example:\${componentName}-\${exampleName}\`
   return (
-    exampleHighlightedMap[key] ||
+    highlightedMap[key] ||
     \`<pre><code>// No code available for \${componentName}/\${exampleName}</code></pre>\`
   )
 }
 
 export function getRegistryCode(src: string): string {
+  const key = \`registry:\${src}\`
   return (
-    registryCodeMap[src] ||
+    codeMap[key] ||
     \`// No code available for \${src}\`
   )
 }
 
 export function getRegistryHighlightedCode(src: string): string {
+  const key = \`registry:\${src}\`
   return (
-    registryHighlightedMap[src] ||
+    highlightedMap[key] ||
     \`<pre><code>// No code available for \${src}</code></pre>\`
   )
 }
 `
+}
 
-  // Generate the dynamic import map file
+async function buildExamples() {
+  console.log("🔨 Building example code registry...")
+
+  // Discover all examples and registry files
+  const exampleFileMap = await discoverExamples()
+  const registryFileMap = await discoverRegistryFiles()
+
+  console.log(`🔍 Discovered ${Object.keys(exampleFileMap).length} examples`)
+  console.log(
+    `🔍 Discovered ${Object.keys(registryFileMap).length} registry files`
+  )
+
+  // Process examples to get initial combined maps
+  const { combinedCodeMap, combinedHighlightedMap } = await processExamples(
+    exampleFileMap
+  )
+
+  // Process registry files and add to combined maps
+  await processRegistry(
+    registryFileMap,
+    combinedCodeMap,
+    combinedHighlightedMap
+  )
+
+  // Generate file contents
+  const { codeMapFile, highlightedMapFile } = generateCombinedMapFiles(
+    combinedCodeMap,
+    combinedHighlightedMap
+  )
+  const codeExtractorFile = generateCodeExtractorFile()
+
+  // Generate the dynamic import map file (unchanged)
   const importMapFile = `// This file is auto-generated by scripts/build-examples.ts
 // Do not edit this file directly - edit the example files instead
 
@@ -291,7 +353,7 @@ import type { ComponentType } from "react"
 
 export const dynamicImportMap: Record<
   string,
-  () => Promise<{ default: ComponentType }>
+  () => Promise<Record<string, ComponentType>>
 > = {
 ${Object.entries(exampleFileMap)
   .map(([key, filePath]) => {
@@ -328,40 +390,29 @@ ${(() => {
 }
 `
 
-  // Write the generated files to generated directory
+  // Write the generated files
   const generatedDir = path.join(CONFIG.ROOT_DIR, "src/generated")
   await fs.mkdir(generatedDir, { recursive: true })
 
   await fs.writeFile(
-    path.join(generatedDir, "example-code-map.ts"),
-    rawCodeMapFile,
+    path.join(generatedDir, "code-map.ts"),
+    codeMapFile,
     "utf-8"
   )
   await fs.writeFile(
-    path.join(generatedDir, "example-highlighted-map.ts"),
-    highlightedCodeMapFile,
-    "utf-8"
-  )
-  await fs.writeFile(
-    path.join(generatedDir, "registry-code-map.ts"),
-    registryCodeMapFile,
-    "utf-8"
-  )
-  await fs.writeFile(
-    path.join(generatedDir, "registry-highlighted-map.ts"),
-    registryHighlightedCodeMapFile,
+    path.join(generatedDir, "highlighted-map.ts"),
+    highlightedMapFile,
     "utf-8"
   )
   await fs.writeFile(CONFIG.CODE_EXTRACTOR_FILE, codeExtractorFile, "utf-8")
   await fs.writeFile(CONFIG.DYNAMIC_IMPORTS_FILE, importMapFile, "utf-8")
 
   console.log("✅ Example code registry built successfully!")
-  console.log(`📝 Generated ${Object.keys(exampleCodeMap).length} examples`)
   console.log(
-    `📝 Generated ${Object.keys(registryCodeMap).length} registry files`
+    `📝 Generated ${Object.keys(combinedCodeMap).length} total entries`
   )
-  console.log("📦 Generated dynamic import map")
-  console.log("🗂️  Generated separate code map files in registry folder")
+  console.log(`🗂️  Created 2 combined map files (down from 4 separate files)`)
+  console.log("🚀 Added file caching for improved build performance")
 
   return { exampleFileMap, registryFileMap }
 }
