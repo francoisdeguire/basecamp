@@ -12,7 +12,7 @@ interface SourceCodeProps {
 
 function ErrorDisplay({ message }: { message: string }) {
   return (
-    <div className="relative overflow-hidden rounded-md border bg-background">
+    <div className="relative overflow-hidden rounded-md border bg-background mt-4">
       <div className="flex h-[100px] items-center justify-center">
         <div className="text-sm text-destructive">{message}</div>
       </div>
