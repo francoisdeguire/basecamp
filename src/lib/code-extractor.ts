@@ -3,6 +3,8 @@
 
 import { exampleCodeMap } from "@/registry/example-code-map"
 import { exampleHighlightedMap } from "@/registry/example-highlighted-map"
+import { registryCodeMap } from "@/registry/registry-code-map"
+import { registryHighlightedMap } from "@/registry/registry-highlighted-map"
 
 export function getExampleCode(
   componentName: string,
@@ -23,5 +25,19 @@ export function getExampleHighlightedCode(
   return (
     exampleHighlightedMap[key] ||
     `<pre><code>// No code available for ${componentName}/${exampleName}</code></pre>`
+  )
+}
+
+export function getRegistryCode(src: string): string {
+  return (
+    registryCodeMap[src] ||
+    `// No code available for ${src}`
+  )
+}
+
+export function getRegistryHighlightedCode(src: string): string {
+  return (
+    registryHighlightedMap[src] ||
+    `<pre><code>// No code available for ${src}</code></pre>`
   )
 }

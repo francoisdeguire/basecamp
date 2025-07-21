@@ -2,68 +2,58 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Tabs, TabList, Tab } from "react-aria-components"
 
 export function ComponentPreviewTabs({
   className,
-  hideCode = false,
   component,
   source,
   ...props
 }: React.ComponentProps<"div"> & {
-  hideCode?: boolean
   component: React.ReactNode
   source: React.ReactNode
 }) {
-  const [tab, setTab] = React.useState("preview")
+  const [activeTab, setActiveTab] = React.useState("preview")
 
   return (
     <div
-      className={cn("group relative mt-4 mb-12 flex flex-col gap-2", className)}
+      className={cn("relative mt-4 mb-12 flex flex-col gap-4", className)}
       {...props}
     >
-      <Tabs
-        className="relative mr-auto w-full"
-        selectedKey={tab}
-        onSelectionChange={(key) => setTab(key as string)}
-      >
-        <div className="flex items-center justify-between">
-          {!hideCode && (
-            <TabList className="flex gap-4">
-              <Tab
-                id="preview"
-                className="text-base font-medium select-none text-muted-foreground selected:text-foreground selected:cursor-auto cursor-pointer"
-              >
-                Preview
-              </Tab>
-              <Tab
-                id="code"
-                className="text-base font-medium select-none text-muted-foreground selected:text-foreground selected:cursor-auto"
-              >
-                Code
-              </Tab>
-            </TabList>
+      <div className="flex gap-4">
+        <button
+          onClick={() => setActiveTab("preview")}
+          className={cn(
+            "text-base font-medium transition-colors",
+            activeTab === "preview"
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground"
           )}
-        </div>
-      </Tabs>
-      <div
-        data-tab={tab}
-        className="data-[tab=code]:border-code relative md:-mx-1.5"
-      >
-        <div
-          data-slot="preview"
-          data-active={tab === "preview"}
-          className="invisible data-[active=true]:visible flex h-[450px] border rounded-lg w-full items-center justify-center p-8"
         >
-          {component}
-        </div>
-        <div
-          data-slot="code"
-          data-active={tab === "code"}
-          className="absolute inset-0 hidden overflow-hidden rounded-lg bg-muted data-[active=true]:block **:[figure]:!m-0 **:[pre]:h-[450px]"
+          Preview
+        </button>
+        <button
+          onClick={() => setActiveTab("code")}
+          className={cn(
+            "text-base font-medium transition-colors",
+            activeTab === "code"
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
         >
-          {source}
-        </div>
+          Code
+        </button>
+      </div>
+
+      <div className="relative">
+        {activeTab === "preview" && (
+          <div className="flex h-[450px] border rounded-lg w-full items-center justify-center p-8">
+            {component}
+          </div>
+        )}
+
+        {activeTab === "code" && (
+          <div className="h-[450px] overflow-hidden rounded-lg">{source}</div>
+        )}
       </div>
     </div>
   )

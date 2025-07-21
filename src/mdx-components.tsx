@@ -5,6 +5,7 @@ import type { MDXComponents } from "mdx/types"
 import { cn } from "@/lib/utils"
 import { ComponentPreview } from "@/components/component-preview"
 import { ComponentSource } from "@/components/component-source"
+import { SourceCode } from "@/components/source-code"
 import { CopyButton } from "@/components/copy-button"
 import { PropsTable } from "@/components/props-table"
 import { Button } from "@/registry/ui/button"
@@ -261,6 +262,7 @@ const sharedComponents = {
   Button,
   ComponentPreview,
   ComponentSource,
+  SourceCode,
   CodeTabs,
   CodeTabsContent,
   PropsTable,
