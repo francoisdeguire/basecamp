@@ -2,17 +2,6 @@
 title: Box
 description: A versatile container component that can be rendered as different HTML elements.
 type: "primitive"
-props:
-  as:
-    type: "keyof JSX.IntrinsicElements"
-    default: "div"
-    description: "The HTML element to render"
-  children:
-    type: "React.ReactNode"
-    description: "The content to display inside the box"
-  className:
-    type: "string"
-    description: "Additional CSS classes to apply"
 ---
 
 ## Usage
@@ -38,7 +27,23 @@ import { Box } from "@/components/primitives/box/box"
 
 ## Props
 
-<PropsTable name="box" />
+<PropsTable
+  content={{
+    as: {
+      type: "keyof JSX.IntrinsicElements",
+      default: '"div"',
+      description: "The HTML element to render",
+    },
+    children: {
+      type: "React.ReactNode",
+      description: "The content to display inside the box",
+    },
+    className: {
+      type: "string",
+      description: "Additional CSS classes to apply",
+    },
+  }}
+/>
 
 ## Use Cases
 

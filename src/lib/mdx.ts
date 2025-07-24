@@ -1,11 +1,7 @@
 import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
-import {
-  ComponentFrontmatter,
-  ComponentProp,
-  ValidationResult,
-} from "@/types/component"
+import { ComponentFrontmatter, ValidationResult } from "@/types/component"
 import { validateFrontmatter } from "@/lib/doc-utils"
 import { CONFIG } from "@/lib/config"
 
@@ -104,49 +100,4 @@ export function findMDXFiles(directory: string): string[] {
   }
 
   return mdxFiles
-}
-
-/**
- * Extract props from a component's MDX documentation file
- */
-export async function getComponentProps(
-  componentName: string
-): Promise<Record<string, ComponentProp> | null> {
-  try {
-    // Try to find the MDX file in components directory first
-    let mdxFilePath = path.join(
-      CONFIG.COMPONENTS_DOCS_DIR,
-      `${componentName}.mdx`
-    )
-
-    // If not found, try primitives directory
-    if (!fs.existsSync(mdxFilePath)) {
-      mdxFilePath = path.join(
-        CONFIG.PRIMITIVES_DOCS_DIR,
-        `${componentName}.mdx`
-      )
-    }
-
-    // If still not found, return null
-    if (!fs.existsSync(mdxFilePath)) {
-      console.warn(`MDX file not found for component: ${componentName}`)
-      return null
-    }
-
-    // Parse the MDX file to get frontmatter
-    const mdxContent = await parseMDXFile(mdxFilePath)
-
-    if (!mdxContent || !mdxContent.frontmatter.props) {
-      console.warn(`No props found in MDX file for component: ${componentName}`)
-      return null
-    }
-
-    return mdxContent.frontmatter.props
-  } catch (error) {
-    console.error(
-      `Error extracting props for component ${componentName}:`,
-      error
-    )
-    return null
-  }
 }

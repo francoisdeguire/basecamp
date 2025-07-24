@@ -23,34 +23,83 @@ A Tabs component built with React Aria Components for accessible tab navigation.
 
 The root container for the tab interface.
 
-```tsx
-<Tabs defaultSelectedKey="tab1" orientation="horizontal">
-  {/* TabList and TabPanels */}
-</Tabs>
-```
+<PropsTable
+  title="Tabs"
+  content={{
+    defaultSelectedKey: {
+      type: "string",
+      description: "The key of the tab that should be selected by default",
+    },
+    selectedKey: {
+      type: "string",
+      description: "The key of the currently selected tab (controlled)",
+    },
+    onSelectionChange: {
+      type: "(key: string) => void",
+      description: "Handler called when the selected tab changes",
+    },
+    orientation: {
+      type: '"horizontal" | "vertical"',
+      default: '"horizontal"',
+      description: "The orientation of the tabs",
+    },
+    children: {
+      type: "React.ReactNode",
+      description: "The TabList and TabPanel components",
+    },
+  }}
+/>
 
 ### TabList
 
 Container for the tab buttons.
 
-```tsx
-<TabList aria-label="Navigation tabs">{/* Tab components */}</TabList>
-```
+<PropsTable
+  title="TabList"
+  content={{
+    "aria-label": {
+      type: "string",
+      description: "Accessible label for the tab list",
+    },
+    children: {
+      type: "React.ReactNode",
+      description: "The Tab components",
+    },
+  }}
+/>
 
 ### Tab
 
 Individual tab button.
 
-```tsx
-<Tab id="tab1">Tab Label</Tab>
-```
+<PropsTable
+  title="Tab"
+  content={{
+    id: {
+      type: "string",
+      description: "Unique identifier for the tab",
+    },
+    children: {
+      type: "React.ReactNode",
+      description: "The tab label content",
+    },
+  }}
+/>
 
 ### TabPanel
 
 Content panel associated with a tab.
 
-```tsx
-<TabPanel id="tab1">
-  <p>Panel content</p>
-</TabPanel>
-```
+<PropsTable
+  title="TabPanel"
+  content={{
+    id: {
+      type: "string",
+      description: "Unique identifier matching the associated tab",
+    },
+    children: {
+      type: "React.ReactNode",
+      description: "The panel content",
+    },
+  }}
+/>

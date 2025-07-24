@@ -8,23 +8,26 @@ import { Focusable } from "react-aria-components"
 import { cn } from "@/lib/utils"
 
 interface PropsTableProps {
-  name: string
-  propsData?: Record<string, ComponentProp> | null
+  content: Record<string, ComponentProp>
+  title?: string
 }
 
-export function PropsTable({ name, propsData }: PropsTableProps) {
-  if (!propsData || Object.keys(propsData).length === 0) {
+export function PropsTable({ content, title }: PropsTableProps) {
+  if (!content || Object.keys(content).length === 0) {
     return (
       <div className="border rounded-lg p-4">
-        <p className="text-gray-600">
-          No props documentation available for {name}.
-        </p>
+        <p className="text-gray-600">No props documentation available.</p>
       </div>
     )
   }
 
   return (
     <div className="border rounded-lg overflow-hidden">
+      {title && (
+        <div className="bg-muted/30 px-4 py-2 border-b">
+          <h4 className="font-medium text-sm">{title}</h4>
+        </div>
+      )}
       <table className="w-full text-xs">
         <thead className="bg-muted/50">
           <tr className="*:text-left *:p-3 *:font-medium *:text-foreground ">
@@ -36,7 +39,7 @@ export function PropsTable({ name, propsData }: PropsTableProps) {
           </tr>
         </thead>
         <tbody className="font-mono">
-          {Object.entries(propsData).map(([propName, prop], index) => (
+          {Object.entries(content).map(([propName, prop], index) => (
             <tr key={index} className="border-t">
               <td className="p-3 flex items-center gap-2">
                 <div className="inline-flex items-center text-[#6F42C1] bg-[#6F42C1]/10 dark:text-[#B392F0] dark:bg-[#B392F0]/20 rounded-sm">

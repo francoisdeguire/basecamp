@@ -2,24 +2,6 @@
 title: Button
 description: A versatile button component that supports multiple variants and sizes. Built with accessibility in mind and follows modern design patterns.
 type: "component"
-props:
-  variant:
-    type: "<'primary' | 'secondary' | 'ghost'>"
-    default: "primary"
-    description: "The visual style of the button"
-  size:
-    type: "<'sm' | 'md' | 'lg'>"
-    default: "md"
-    description: "The size of the button"
-  children:
-    type: "React.ReactNode"
-    description: "The content to display inside the button"
-  className:
-    type: "string"
-    description: "Additional CSS classes to apply"
-  onClick:
-    type: "() => void"
-    description: "Function called when the button is clicked"
 ---
 
 <ComponentPreview component="button" example="demo" />
@@ -91,7 +73,32 @@ import { Button } from "@/components/ui/button"
 
 ## Props
 
-<PropsTable name="button" />
+<PropsTable
+  content={{
+    variant: {
+      type: '"primary" | "secondary" | "ghost"',
+      default: '"primary"',
+      description: "The visual style of the button",
+    },
+    size: {
+      type: '"sm" | "md" | "lg"',
+      default: '"md"',
+      description: "The size of the button",
+    },
+    children: {
+      type: "React.ReactNode",
+      description: "The content to display inside the button",
+    },
+    className: {
+      type: "string",
+      description: "Additional CSS classes to apply",
+    },
+    onClick: {
+      type: "() => void",
+      description: "Function called when the button is clicked",
+    },
+  }}
+/>
 
 ## Accessibility
 

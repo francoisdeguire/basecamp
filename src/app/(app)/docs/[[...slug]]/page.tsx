@@ -1,17 +1,12 @@
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote-client/rsc"
 import type { MDXComponents } from "mdx/types"
-import {
-  parseMDXFile,
-  getComponentProps,
-  rehypePrettyCodeOptions,
-} from "@/lib/mdx"
+import { parseMDXFile, rehypePrettyCodeOptions } from "@/lib/mdx"
 import { extractTocFromMdx } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
 import { buildRegistry } from "@/lib/registry"
 import { getRootPages } from "@/lib/config"
-import Link from "next/link"
 import type { Metadata } from "next"
 import { DashboardTableOfContents } from "@/components/layout/TOC"
 import { mdxComponents } from "@/mdx-components"
@@ -23,6 +18,7 @@ import rehypeSlug from "rehype-slug"
 const components = {
   ...mdxComponents,
   ComponentPreview,
+  PropsTable,
 } as MDXComponents
 
 interface PageProps {
@@ -156,65 +152,6 @@ export default async function DocPage({ params }: PageProps) {
   // Extract TOC for potential future use
   const toc = extractTocFromMdx(doc.body.raw)
 
-  // Pre-load props data for component/primitive pages
-  let propsData = null
-  if (doc.type === "components" || doc.type === "primitives") {
-    const componentName = doc.slugAsParams.split("/")[1]
-    if (componentName) {
-      propsData = await getComponentProps(componentName)
-    }
-  }
-
-  // Create custom PropsTable component with pre-loaded data
-  const CustomPropsTable = ({ name }: { name: string }) => (
-    <PropsTable name={name} propsData={propsData} />
-  )
-
-  // Update components object to use custom PropsTable
-  const customComponents = {
-    ...components,
-    PropsTable: CustomPropsTable,
-  } as MDXComponents
-
-  // Handle category listing pages
-  if (doc.type === "components-listing" || doc.type === "primitives-listing") {
-    const categorySlug =
-      doc.type === "components-listing" ? "components" : "primitives"
-    const items =
-      doc.type === "components-listing" ? doc.components : doc.primitives
-
-    return (
-      <div className="flex flex-1 pr-64">
-        <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-8">
-          {/* Header */}
-          <div className="space-y-2">
-            <h1 className="scroll-m-20 text-3xl font-bold tracking-tight">
-              {doc.title}
-            </h1>
-            {doc.description && (
-              <p className="text-base text-muted-foreground">
-                {doc.description}
-              </p>
-            )}
-          </div>
-
-          {/* Content */}
-          <div className="grid grid-cols-3 gap-6">
-            {items?.map((component) => (
-              <Link
-                key={component.slug}
-                href={`/docs/${categorySlug}/${component.slug}`}
-                className="text-lg font-medium hover:underline underline-offset-4"
-              >
-                {component.frontmatter.title}
-              </Link>
-            ))}
-          </div>
-        </main>
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-1">
       <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-16">
@@ -234,7 +171,7 @@ export default async function DocPage({ params }: PageProps) {
         <div className="prose max-w-none space-y-8">
           <MDXRemote
             source={doc.body.content}
-            components={customComponents}
+            components={components}
             options={{
               mdxOptions: {
                 rehypePlugins: [

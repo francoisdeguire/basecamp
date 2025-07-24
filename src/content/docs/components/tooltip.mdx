@@ -2,21 +2,6 @@
 title: Tooltip
 description: A floating label that provides additional information about an element when hovered or focused.
 type: "component"
-props:
-  content:
-    type: "React.ReactNode"
-    description: "The content to display in the tooltip"
-  children:
-    type: "React.ReactNode"
-    description: "The element that triggers the tooltip"
-  placement:
-    type: "<'top' | 'right' | 'bottom' | 'left'>"
-    default: "top"
-    description: "The placement of the tooltip relative to the trigger"
-  delayDuration:
-    type: "number"
-    default: "700"
-    description: "The delay before the tooltip opens"
 ---
 
 ## Usage
@@ -56,27 +41,60 @@ Different sizes for varying amounts of content:
 
 The container component that manages the tooltip state and positioning.
 
-| Prop         | Type              | Default | Description                          |
-| ------------ | ----------------- | ------- | ------------------------------------ |
-| `delay`      | `number`          | `700`   | Delay in milliseconds before showing |
-| `closeDelay` | `number`          | `0`     | Delay in milliseconds before hiding  |
-| `children`   | `React.ReactNode` | -       | Trigger element and tooltip          |
+<PropsTable
+  title="TooltipTrigger"
+  content={{
+    delay: {
+      type: "number",
+      default: "700",
+      description: "Delay in milliseconds before showing",
+    },
+    closeDelay: {
+      type: "number",
+      default: "0",
+      description: "Delay in milliseconds before hiding",
+    },
+    children: {
+      type: "React.ReactNode",
+      description: "Trigger element and tooltip",
+    },
+  }}
+/>
 
 ### Tooltip
 
 The styled tooltip content with visual variants and optional arrow.
 
-| Prop        | Type                                                     | Default     | Description                     |
-| ----------- | -------------------------------------------------------- | ----------- | ------------------------------- |
-| `variant`   | `"default" \| "secondary" \| "destructive" \| "outline"` | `"default"` | Visual style                    |
-| `size`      | `"sm" \| "default" \| "lg"`                              | `"default"` | Content size                    |
-| `showArrow` | `boolean`                                                | `true`      | Whether to show arrow           |
-| `placement` | `"top" \| "bottom" \| "left" \| "right"`                 | `"top"`     | Preferred placement             |
-| `offset`    | `number`                                                 | `4`         | Distance from trigger in pixels |
-
-## Props
-
-<PropsTable name="tooltip" />
+<PropsTable
+  title="Tooltip"
+  content={{
+    variant: {
+      type: '"default" | "secondary" | "destructive" | "outline"',
+      default: '"default"',
+      description: "Visual style",
+    },
+    size: {
+      type: '"sm" | "default" | "lg"',
+      default: '"default"',
+      description: "Content size",
+    },
+    showArrow: {
+      type: "boolean",
+      default: "true",
+      description: "Whether to show arrow",
+    },
+    placement: {
+      type: '"top" | "bottom" | "left" | "right"',
+      default: '"top"',
+      description: "Preferred placement",
+    },
+    offset: {
+      type: "number",
+      default: "4",
+      description: "Distance from trigger in pixels",
+    },
+  }}
+/>
 
 ## Accessibility
 
