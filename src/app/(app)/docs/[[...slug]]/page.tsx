@@ -173,18 +173,73 @@ export default async function DocPage({ params }: PageProps) {
 
         {/* Content */}
         <div className="prose max-w-none space-y-4">
-          <MDXRemote
-            source={doc.body.content}
-            components={components}
-            options={{
-              mdxOptions: {
-                rehypePlugins: [
-                  [rehypePrettyCode, rehypePrettyCodeOptions],
-                  [rehypeSlug],
-                ],
-              },
-            }}
-          />
+          {/* Handle listing pages */}
+          {doc.type === "components-listing" && "components" in doc && (
+            <div className="grid grid-cols-1 gap-4">
+              {doc.components.map((component) => (
+                <div
+                  key={component.slug}
+                  className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-lg font-semibold mb-1">
+                    <a
+                      href={`/docs/components/${component.slug}`}
+                      className="text-foreground hover:text-primary no-underline"
+                    >
+                      {component.frontmatter.title || component.name}
+                    </a>
+                  </h3>
+                  {component.frontmatter.description && (
+                    <p className="text-sm text-muted-foreground mb-0">
+                      {component.frontmatter.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {doc.type === "primitives-listing" && "primitives" in doc && (
+            <div className="grid grid-cols-1 gap-4">
+              {doc.primitives.map((primitive) => (
+                <div
+                  key={primitive.slug}
+                  className="border rounded-lg p-4 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-lg font-semibold mb-1">
+                    <a
+                      href={`/docs/primitives/${primitive.slug}`}
+                      className="text-foreground hover:text-primary no-underline"
+                    >
+                      {primitive.frontmatter.title || primitive.name}
+                    </a>
+                  </h3>
+                  {primitive.frontmatter.description && (
+                    <p className="text-sm text-muted-foreground mb-0">
+                      {primitive.frontmatter.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Handle regular MDX content pages */}
+          {doc.type !== "components-listing" &&
+            doc.type !== "primitives-listing" && (
+              <MDXRemote
+                source={doc.body.content}
+                components={components}
+                options={{
+                  mdxOptions: {
+                    rehypePlugins: [
+                      [rehypePrettyCode, rehypePrettyCodeOptions],
+                      [rehypeSlug],
+                    ],
+                  },
+                }}
+              />
+            )}
         </div>
       </main>
 
