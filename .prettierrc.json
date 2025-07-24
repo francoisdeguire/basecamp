@@ -1,0 +1,18 @@
+{
+  "semi": false,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "useTabs": false,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "overrides": [
+    {
+      "files": "*.mdx",
+      "options": {
+        "semi": false,
+        "parser": "mdx",
+        "embeddedLanguageFormatting": "off"
+      }
+    }
+  ]
+}

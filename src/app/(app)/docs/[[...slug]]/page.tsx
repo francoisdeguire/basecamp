@@ -155,24 +155,22 @@ export default async function DocPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-1">
-      <main className="mx-auto flex-1 max-w-2xl pt-8 pb-12 space-y-16">
+      <main className="mx-auto flex-1 max-w-2xl pt-8 pb-32 space-y-16">
         {/* Header */}
-        <div className="space-y-2 mt-1.5">
-          <h1 className="scroll-m-20 text-4xl font-medium tracking-tighter">
-            {doc.title}
-          </h1>
+        <div className="space-y-4 mt-1.5">
+          <h1 className="text-5xl font-medium tracking-tighter">{doc.title}</h1>
           {doc.description && (
-            <p className="text-base font-medium text-pretty text-muted-foreground">
+            <p className="text-base text-pretty text-muted-foreground">
               {doc.description}
             </p>
           )}
           {"links" in doc.frontmatter && doc.frontmatter.links && (
-            <LinkPills links={doc.frontmatter.links} className="mt-4" />
+            <LinkPills links={doc.frontmatter.links} className="mt-6" />
           )}
         </div>
 
         {/* Content */}
-        <div className="prose max-w-none space-y-4">
+        <div className="prose max-w-none">
           {/* Handle listing pages */}
           {doc.type === "components-listing" && "components" in doc && (
             <div className="grid grid-cols-1 gap-4">

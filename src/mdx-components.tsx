@@ -41,7 +41,7 @@ const sharedComponents = {
   h1: ({ className, ...props }: React.ComponentProps<"h1">) => (
     <h1
       className={cn(
-        "font-heading mt-2 scroll-m-28 text-3xl font-bold tracking-tight",
+        "mt-2 scroll-m-24 text-3xl font-bold tracking-tight",
         className
       )}
       {...props}
@@ -57,7 +57,7 @@ const sharedComponents = {
           .replace(/\?/g, "")
           .toLowerCase()}
         className={cn(
-          "font-heading mt-12 scroll-m-28 text-2xl font-medium tracking-tight first:mt-0 lg:mt-20 [&+p]:!mt-4 *:[code]:text-2xl",
+          "mt-12 scroll-m-24 text-2xl tracking-tight first:mt-0 lg:mt-24 [&+p]:!mt-3 *:[code]:text-2xl font-medium",
           className
         )}
         {...props}
@@ -67,7 +67,7 @@ const sharedComponents = {
   h3: ({ className, ...props }: React.ComponentProps<"h3">) => (
     <h3
       className={cn(
-        "font-heading mt-8 scroll-m-28 text-xl font-semibold tracking-tight *:[code]:text-xl",
+        "mt-8 scroll-m-24 text-xl font-medium tracking-tight",
         className
       )}
       {...props}
@@ -76,7 +76,7 @@ const sharedComponents = {
   h4: ({ className, ...props }: React.ComponentProps<"h4">) => (
     <h4
       className={cn(
-        "font-heading mt-8 scroll-m-28 text-lg font-medium tracking-tight",
+        "mt-6 scroll-m-24 text-lg font-medium tracking-tight",
         className
       )}
       {...props}
@@ -85,7 +85,7 @@ const sharedComponents = {
   h5: ({ className, ...props }: React.ComponentProps<"h5">) => (
     <h5
       className={cn(
-        "mt-8 scroll-m-28 text-lg font-medium tracking-tight",
+        "mt-6 scroll-m-24 text-lg font-medium tracking-tight",
         className
       )}
       {...props}
@@ -94,7 +94,7 @@ const sharedComponents = {
   h6: ({ className, ...props }: React.ComponentProps<"h6">) => (
     <h6
       className={cn(
-        "mt-8 scroll-m-28 text-base font-medium tracking-tight",
+        "mt-6 scroll-m-24 text-base font-medium tracking-tight",
         className
       )}
       {...props}
@@ -246,7 +246,7 @@ const sharedComponents = {
   Step: ({ className, ...props }: React.ComponentProps<"h3">) => (
     <h3
       className={cn(
-        "font-heading mt-16 text-base space-y-4 scroll-m-32 font-medium tracking-tight",
+        "mt-16 text-base space-y-4 scroll-m-32 font-medium tracking-tight",
         className
       )}
       {...props}
