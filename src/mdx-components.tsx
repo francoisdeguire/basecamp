@@ -176,7 +176,7 @@ const sharedComponents = {
     const rawText = extractTextFromChildren(children)
 
     return (
-      <div className="relative">
+      <div className="relative -mx-4">
         {rawText && <CopyButton value={rawText} />}
         <pre
           className={cn(

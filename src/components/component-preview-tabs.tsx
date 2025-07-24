@@ -16,10 +16,10 @@ export function ComponentPreviewTabs({
 
   return (
     <div
-      className={cn("relative mt-4 mb-12 flex flex-col gap-4", className)}
+      className={cn("relative mt-4 mb-12 -mx-4 flex flex-col gap-4", className)}
       {...props}
     >
-      <div className="flex gap-4">
+      <div className="flex gap-4 ml-4">
         <button
           onClick={() => setActiveTab("preview")}
           className={cn(

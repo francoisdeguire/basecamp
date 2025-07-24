@@ -162,7 +162,7 @@ export default async function DocPage({ params }: PageProps) {
             {doc.title}
           </h1>
           {doc.description && (
-            <p className="text-base font-medium text-balance text-muted-foreground">
+            <p className="text-base font-medium text-pretty text-muted-foreground">
               {doc.description}
             </p>
           )}

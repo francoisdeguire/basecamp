@@ -3,7 +3,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
 
 export function BasicExample() {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-2">
       <Button>
         <ArrowLeftIcon />
         Sliiide to the left

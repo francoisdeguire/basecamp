@@ -22,7 +22,7 @@ export function SourceCodeClient({
   const [isExpanded, setIsExpanded] = useState(false)
 
   const containerClasses = cn(
-    "flex flex-col relative rounded-md bg-muted overflow-hidden mt-4",
+    "flex flex-col relative rounded-md bg-muted overflow-hidden mt-4 -mx-4",
     className
   )
 

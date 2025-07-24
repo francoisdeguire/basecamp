@@ -22,7 +22,7 @@ export function PropsTable({ content, title }: PropsTableProps) {
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border rounded-lg overflow-hidden -mx-4">
       {title && (
         <div className="bg-muted/30 px-4 py-2 border-b">
           <h4 className="font-medium text-sm">{title}</h4>
@@ -30,19 +30,17 @@ export function PropsTable({ content, title }: PropsTableProps) {
       )}
       <table className="w-full text-xs">
         <thead className="bg-muted/50">
-          <tr className="*:text-left *:p-3 *:font-medium *:text-foreground ">
-            <th className="text-left p-3 font-medium text-foreground">Name</th>
-            <th className="text-left p-3 font-medium text-foreground">Type</th>
-            <th className="text-left p-3 font-medium text-foreground">
-              Default
-            </th>
+          <tr className="*:text-left *:py-3 *:px-4 *:font-medium *:text-foreground ">
+            <th>Name</th>
+            <th>Type</th>
+            <th>Default</th>
           </tr>
         </thead>
         <tbody className="font-mono">
           {Object.entries(content).map(([propName, prop], index) => (
             <tr key={index} className="border-t">
               <td className="p-3 flex items-center gap-2">
-                <div className="inline-flex items-center text-[#6F42C1] bg-[#6F42C1]/10 dark:text-[#B392F0] dark:bg-[#B392F0]/20 rounded-sm">
+                <div className="inline-flex items-center text-[#6F42C1] bg-[#6F42C1]/10 dark:text-[#B392F0] dark:bg-[#B392F0]/20 rounded-sm -mx-0.5">
                   <code className="px-1">{propName}</code>
                 </div>
                 {prop.description && (
@@ -55,7 +53,7 @@ export function PropsTable({ content, title }: PropsTableProps) {
                 )}
               </td>
               <td className="p-3">
-                <code className="bg-muted text-muted-foreground rounded-sm px-1 py-0.5">
+                <code className="bg-muted text-muted-foreground rounded-sm px-1 py-0.5 -mx-0.5">
                   {prop.type}
                 </code>
               </td>
