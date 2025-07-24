@@ -10,6 +10,7 @@ import { CopyButton } from "@/components/copy-button"
 import { PropsTable } from "@/components/props-table"
 import { Button } from "@/registry/ui/button"
 import { CodeTabs, CodeTabsContent } from "./components/code-tabs"
+import { LinkPills } from "@/components/link-pills"
 
 // Extract raw text from code children for copy button
 const extractTextFromChildren = (children: React.ReactNode): string => {
@@ -266,6 +267,7 @@ const sharedComponents = {
   CodeTabs,
   CodeTabsContent,
   PropsTable,
+  LinkPills,
   Link: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link
       className={cn("font-medium underline underline-offset-4", className)}

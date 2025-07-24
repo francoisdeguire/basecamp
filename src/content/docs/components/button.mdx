@@ -1,10 +1,25 @@
 ---
 title: Button
 description: A versatile button component that supports multiple variants and sizes. Built with accessibility in mind and follows modern design patterns.
-type: "component"
+links:
+  - title: "React Aria"
+    href: "https://react-spectrum.adobe.com/react-aria/Button.html"
 ---
 
 <ComponentPreview component="button" example="demo" />
+
+## When to use
+
+A button is a user interface element that allows users to initiate actions or events, such as submitting forms, opening dialogs, canceling operations, or deleting items.
+
+##### Alternative Components
+
+<LinkPills
+  links={[
+    { title: "Link", href: "/docs/components/link" },
+    { title: "Toggle Button", href: "/docs/components/toggle-button" },
+  ]}
+/>
 
 ## Installation
 
@@ -13,7 +28,7 @@ type: "component"
 <CodeTabsContent id="cli">
 
 ```bash
-npx shadcn@latest add avatar
+jsrepo add button
 ```
 
 </CodeTabsContent>
@@ -22,13 +37,7 @@ npx shadcn@latest add avatar
 
 <Steps>
 
-<Step>1. Install the following dependencies:</Step>
-
-```bash
-npm install @radix-ui/react-avatar
-```
-
-<Step>2. Copy and paste the following code into your project:</Step>
+<Step>1. Copy and paste the following code into your project:</Step>
 
 <SourceCode src="ui/button/index" filename="components/ui/button/index.tsx" />
 
@@ -39,7 +48,7 @@ npm install @radix-ui/react-avatar
 
 <SourceCode src="ui/button/types" filename="components/ui/button/types.ts" />
 
-<Step>3. Update the import paths to match your project setup.</Step>
+<Step>2. Update the import paths to match your project setup.</Step>
 
 </Steps>
 
@@ -61,15 +70,23 @@ import { Button } from "@/components/ui/button"
 
 ### Basic Button
 
-<ComponentPreview component="button" example="basic" />
+<ComponentPreview component="button" example="variants" />
 
 ### Variants
 
-<ComponentPreview component="button" example="variants" />
+<ComponentPreview component="button" example="icon" />
 
 ### Sizes
 
 <ComponentPreview component="button" example="sizes" />
+
+### Disabled
+
+<ComponentPreview component="button" example="disabled" />
+
+### As Child
+
+<ComponentPreview component="button" example="as-child" />
 
 ## Props
 

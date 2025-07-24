@@ -5,6 +5,7 @@ import { parseMDXFile, rehypePrettyCodeOptions } from "@/lib/mdx"
 import { extractTocFromMdx } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
+import { LinkPills } from "@/components/link-pills"
 import { buildRegistry } from "@/lib/registry"
 import { getRootPages } from "@/lib/config"
 import type { Metadata } from "next"
@@ -165,10 +166,13 @@ export default async function DocPage({ params }: PageProps) {
               {doc.description}
             </p>
           )}
+          {"links" in doc.frontmatter && doc.frontmatter.links && (
+            <LinkPills links={doc.frontmatter.links} className="mt-4" />
+          )}
         </div>
 
         {/* Content */}
-        <div className="prose max-w-none space-y-8">
+        <div className="prose max-w-none space-y-4">
           <MDXRemote
             source={doc.body.content}
             components={components}

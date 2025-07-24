@@ -8,6 +8,10 @@ export interface ComponentProp {
 export interface ComponentFrontmatter {
   title: string
   description: string
+  links?: Array<{
+    title: string
+    href: string
+  }>
   props?: Record<string, ComponentProp>
   dependencies?: string[]
   copyable?: boolean
