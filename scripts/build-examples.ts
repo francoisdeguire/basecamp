@@ -79,7 +79,7 @@ async function processFile(
 
     return { rawCode, highlightedCode }
   } catch (error) {
-    console.warn(`⚠️  Could not process ${filePath}:`, error)
+    console.warn(`😤 ${filePath} is being difficult rn (skill issue?):`, error)
     const errorCode = `// Error loading code from ${filePath}`
     const errorHighlighted = `<pre><code>${errorCode}</code></pre>`
 
@@ -136,7 +136,7 @@ async function discoverExamples(): Promise<Record<string, string>> {
       }
     }
   } catch (error) {
-    console.error("Error discovering examples:", error)
+    console.error("💀 Example discovery went sideways (big oof):", error)
   }
 
   return exampleFileMap
@@ -179,32 +179,12 @@ async function discoverRegistryFiles(): Promise<Record<string, string>> {
         }
       }
     } catch (error) {
-      console.error(`Error scanning directory ${dirPath}:`, error)
+      console.error(`🤡 Directory scan failed spectacularly ${dirPath}:`, error)
     }
   }
 
   await scanDirectory(CONFIG.REGISTRY_DIR)
   return registryFileMap
-}
-
-/**
- * Process all example files and return combined maps
- */
-async function processExamples(exampleFileMap: Record<string, string>) {
-  const combinedCodeMap: Record<string, string> = {}
-  const combinedHighlightedMap: Record<string, string> = {}
-
-  console.log("✨ Processing example files...")
-  for (const [key, filePath] of Object.entries(exampleFileMap)) {
-    const { rawCode, highlightedCode } = await processFile(filePath, "tsx")
-
-    // Use "example:" prefix to distinguish from registry files
-    const prefixedKey = `example:${key}`
-    combinedCodeMap[prefixedKey] = rawCode
-    combinedHighlightedMap[prefixedKey] = highlightedCode
-  }
-
-  return { combinedCodeMap, combinedHighlightedMap }
 }
 
 /**
@@ -215,7 +195,7 @@ async function processRegistry(
   combinedCodeMap: Record<string, string>,
   combinedHighlightedMap: Record<string, string>
 ) {
-  console.log("✨ Processing registry files...")
+  console.log("✨ Yassifying the registry")
   for (const [key, filePath] of Object.entries(registryFileMap)) {
     // Determine language from file extension
     let language = "tsx"
@@ -229,6 +209,25 @@ async function processRegistry(
 
     // Use "registry:" prefix to distinguish from example files
     const prefixedKey = `registry:${key}`
+    combinedCodeMap[prefixedKey] = rawCode
+    combinedHighlightedMap[prefixedKey] = highlightedCode
+  }
+}
+
+/**
+ * Process all example files and add to combined maps
+ */
+async function processExamples(
+  exampleFileMap: Record<string, string>,
+  combinedCodeMap: Record<string, string>,
+  combinedHighlightedMap: Record<string, string>
+) {
+  console.log("✨ Yassifying the examples")
+  for (const [key, filePath] of Object.entries(exampleFileMap)) {
+    const { rawCode, highlightedCode } = await processFile(filePath, "tsx")
+
+    // Use "example:" prefix to distinguish from registry files
+    const prefixedKey = `example:${key}`
     combinedCodeMap[prefixedKey] = rawCode
     combinedHighlightedMap[prefixedKey] = highlightedCode
   }
@@ -315,28 +314,31 @@ export function getRegistryHighlightedCode(src: string): string {
 }
 
 async function buildExamples() {
-  console.log("🔨 Building example code registry...")
+  console.log("🍳 Time to cook")
 
   // Discover all examples and registry files
   const exampleFileMap = await discoverExamples()
   const registryFileMap = await discoverRegistryFiles()
 
-  console.log(`🔍 Discovered ${Object.keys(exampleFileMap).length} examples`)
   console.log(
-    `🔍 Discovered ${Object.keys(registryFileMap).length} registry files`
+    `🎯 Locked onto ${Object.keys(registryFileMap).length} registry files and ${
+      Object.keys(exampleFileMap).length
+    } examples`
   )
 
-  // Process examples to get initial combined maps
-  const { combinedCodeMap, combinedHighlightedMap } = await processExamples(
-    exampleFileMap
-  )
+  // Initialize combined maps
+  const combinedCodeMap: Record<string, string> = {}
+  const combinedHighlightedMap: Record<string, string> = {}
 
-  // Process registry files and add to combined maps
+  // Process registry files first (base components)
   await processRegistry(
     registryFileMap,
     combinedCodeMap,
     combinedHighlightedMap
   )
+
+  // Process examples after registry
+  await processExamples(exampleFileMap, combinedCodeMap, combinedHighlightedMap)
 
   // Generate file contents
   const { codeMapFile, highlightedMapFile } = generateCombinedMapFiles(
@@ -407,12 +409,13 @@ ${(() => {
   await fs.writeFile(CONFIG.CODE_EXTRACTOR_FILE, codeExtractorFile, "utf-8")
   await fs.writeFile(CONFIG.DYNAMIC_IMPORTS_FILE, importMapFile, "utf-8")
 
-  console.log("✅ Example code registry built successfully!")
+  console.log("🔒 Code registry is LOCKED IN")
   console.log(
-    `📝 Generated ${Object.keys(combinedCodeMap).length} total entries`
+    `📈 Generated ${
+      Object.keys(combinedCodeMap).length
+    } entries (shits bussin fr)`
   )
-  console.log(`🗂️  Created 2 combined map files (down from 4 separate files)`)
-  console.log("🚀 Added file caching for improved build performance")
+  console.log(`🗺️  Map files locked and loaded chief`)
 
   return { exampleFileMap, registryFileMap }
 }
@@ -421,7 +424,7 @@ ${(() => {
 const isWatchMode = process.argv.includes("--watch")
 
 if (isWatchMode) {
-  console.log("👀 Watching for changes in example and registry files...")
+  console.log("👁️👄👁️ On guard duty... these files can't hide from me")
 
   // Build initially and get the file paths
   let currentExampleFileMap: Record<string, string> = {}
@@ -442,7 +445,7 @@ if (isWatchMode) {
       { recursive: true },
       async (eventType, filename) => {
         if (filename && filename.endsWith(".tsx")) {
-          console.log(`📝 Example file changed: ${filename}`)
+          console.log(`🚨 ${filename} just had a glow-up`)
           await rebuildAndUpdateWatchers()
         }
       }
@@ -459,7 +462,9 @@ if (isWatchMode) {
             filename.endsWith(".ts") ||
             filename.endsWith(".css"))
         ) {
-          console.log(`📝 Registry file changed: ${filename}`)
+          console.log(
+            `🔄 ${filename} said 'watch me transform' and did exactly that`
+          )
           await rebuildAndUpdateWatchers()
         }
       }
@@ -470,19 +475,22 @@ if (isWatchMode) {
     const { exampleFileMap, registryFileMap } = await buildExamples()
 
     // Check if we have new files that need watching
-    const newExampleFiles = Object.keys(exampleFileMap).filter(
-      (key) => !Object.keys(currentExampleFileMap).includes(key)
-    )
+
     const newRegistryFiles = Object.keys(registryFileMap).filter(
       (key) => !Object.keys(currentRegistryFileMap).includes(key)
     )
+    const newExampleFiles = Object.keys(exampleFileMap).filter(
+      (key) => !Object.keys(currentExampleFileMap).includes(key)
+    )
 
-    if (newExampleFiles.length > 0) {
-      console.log(`🆕 Discovered ${newExampleFiles.length} new example(s)`)
-    }
     if (newRegistryFiles.length > 0) {
       console.log(
-        `🆕 Discovered ${newRegistryFiles.length} new registry file(s)`
+        `🎁 Christmas came early! Found ${newRegistryFiles.length} new registry files`
+      )
+    }
+    if (newExampleFiles.length > 0) {
+      console.log(
+        `🌟 ${newExampleFiles.length} new examples just dropped and they're looking fresh`
       )
     }
 
