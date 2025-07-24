@@ -38,19 +38,8 @@ export function validateFrontmatter(
     })
   }
 
-  // Only validate examples and props for component pages
-  // (Skip validation if these fields are not present, as they're optional for docs pages)
-  if (
-    frontmatter.examples !== undefined &&
-    !Array.isArray(frontmatter.examples)
-  ) {
-    errors.push({
-      component: componentName,
-      field: "examples",
-      message: "Examples must be an array",
-    })
-  }
-
+  // Only validate props for component pages
+  // (Skip validation if this field is not present, as it's optional for docs pages)
   if (
     frontmatter.props !== undefined &&
     (typeof frontmatter.props !== "object" || frontmatter.props === null)

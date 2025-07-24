@@ -1,18 +1,18 @@
 ---
 title: Box
-description: A flexible container component that can render as any HTML element. This is a foundational primitive that provides a consistent way to create containers with custom styling.
-examples: ["basic", "as-element"]
+description: A versatile container component that can be rendered as different HTML elements.
+type: "primitive"
 props:
+  as:
+    type: "keyof JSX.IntrinsicElements"
+    default: "div"
+    description: "The HTML element to render"
   children:
     type: "React.ReactNode"
     description: "The content to display inside the box"
   className:
     type: "string"
     description: "Additional CSS classes to apply"
-  as:
-    type: "keyof JSX.IntrinsicElements"
-    default: "div"
-    description: "The HTML element to render as"
 ---
 
 ## Usage

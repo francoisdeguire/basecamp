@@ -1,32 +1,22 @@
 ---
 title: Tooltip
-description: A floating tooltip that displays additional information when hovering or focusing on an element. Built with React Aria for accessibility and supports multiple visual variants and sizes.
-examples: ["basic", "variants", "sizes"]
+description: A floating label that provides additional information about an element when hovered or focused.
+type: "component"
 props:
-  variant:
-    type: "default | secondary | destructive | outline"
-    default: "default"
-    description: "The visual style of the tooltip"
-  size:
-    type: "sm | default | lg"
-    default: "default"
-    description: "The size of the tooltip content"
-  showArrow:
-    type: "boolean"
-    default: "true"
-    description: "Whether to show an arrow pointing to the trigger element"
-  offset:
-    type: "number"
-    default: "4"
-    description: "The distance in pixels from the trigger element"
-  delay:
+  content:
+    type: "React.ReactNode"
+    description: "The content to display in the tooltip"
+  children:
+    type: "React.ReactNode"
+    description: "The element that triggers the tooltip"
+  placement:
+    type: "<'top' | 'right' | 'bottom' | 'left'>"
+    default: "top"
+    description: "The placement of the tooltip relative to the trigger"
+  delayDuration:
     type: "number"
     default: "700"
-    description: "The delay in milliseconds before the tooltip appears"
-  closeDelay:
-    type: "number"
-    default: "0"
-    description: "The delay in milliseconds before the tooltip disappears"
+    description: "The delay before the tooltip opens"
 ---
 
 ## Usage

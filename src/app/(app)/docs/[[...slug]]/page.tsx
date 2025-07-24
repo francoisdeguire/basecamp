@@ -125,7 +125,6 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
     frontmatter: component.frontmatter,
     path: component.path,
     type: category as "components" | "primitives",
-    examples: component.examples,
   }
 }
 

@@ -8,7 +8,6 @@ export interface ComponentProp {
 export interface ComponentFrontmatter {
   title: string
   description: string
-  examples?: string[]
   props?: Record<string, ComponentProp>
   dependencies?: string[]
   copyable?: boolean
@@ -19,7 +18,6 @@ export interface ComponentInfo {
   type: "ui" | "primitive"
   path: string
   frontmatter: ComponentFrontmatter
-  examples: string[]
   slug: string
 }
 

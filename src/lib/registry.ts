@@ -25,7 +25,6 @@ export async function buildRegistry(): Promise<RegistryData> {
         type: "ui",
         path: filePath,
         frontmatter: mdxContent.frontmatter,
-        examples: mdxContent.frontmatter.examples || [],
         slug: componentName.toLowerCase(),
       })
     }
@@ -42,7 +41,6 @@ export async function buildRegistry(): Promise<RegistryData> {
         type: "primitive",
         path: filePath,
         frontmatter: mdxContent.frontmatter,
-        examples: mdxContent.frontmatter.examples || [],
         slug: componentName.toLowerCase(),
       })
     }
