@@ -15,7 +15,7 @@ export function ThemeSwitcher() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="sm" className="size-9 px-0" isDisabled>
+      <Button variant="tertiary" size="sm" className="size-9 px-0" isDisabled>
         <div className="size-4" />
       </Button>
     )
@@ -23,7 +23,7 @@ export function ThemeSwitcher() {
 
   return (
     <Button
-      variant="ghost"
+      variant="tertiary"
       size="sm"
       className="size-9 px-0"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}

@@ -21,13 +21,13 @@ export function WebsiteHeader() {
       <span className="h-5 w-px bg-border" />
 
       <div className="flex items-center gap-1 -ml-3">
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="tertiary" size="sm" asChild>
           <Link href="/docs">Docs</Link>
         </Button>
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="tertiary" size="sm" asChild>
           <Link href="/docs/components">Components</Link>
         </Button>
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="tertiary" size="sm" asChild>
           <Link href="/docs/primitives">Primitives</Link>
         </Button>
       </div>

@@ -13,7 +13,7 @@ export default async function HomePage() {
         </p>
       </div>
 
-      <Button asChild variant="default" size="lg">
+      <Button asChild variant="primary" size="lg">
         <Link href="/docs">Go to docs</Link>
       </Button>
     </div>

@@ -11,7 +11,7 @@ export const SidebarItem = ({
   return (
     <li>
       <Button
-        variant="ghost"
+        variant="tertiary"
         size="sm"
         className="relative h-[30px] w-fit overflow-visible text-[0.8rem] font-medium"
         asChild

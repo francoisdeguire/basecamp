@@ -5,7 +5,7 @@ export default function VariantsExample() {
   return (
     <div className="flex flex-wrap gap-4 justify-center items-center min-h-[300px]">
       <TooltipTrigger>
-        <Button variant="default">Default</Button>
+        <Button variant="primary">Primary</Button>
         <Tooltip variant="default">Default tooltip variant</Tooltip>
       </TooltipTrigger>
 
@@ -20,7 +20,7 @@ export default function VariantsExample() {
       </TooltipTrigger>
 
       <TooltipTrigger>
-        <Button variant="ghost">Ghost</Button>
+        <Button variant="tertiary">Tertiary</Button>
         <Tooltip variant="destructive">
           Destructive tooltip variant for errors
         </Tooltip>
