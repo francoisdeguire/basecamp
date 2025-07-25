@@ -1,6 +1,6 @@
 import { Button } from "@/registry/ui/button"
 
-export function ButtonSizesExample() {
+export function ButtonSizes() {
   return (
     <div className="flex items-center gap-2">
       <Button size="sm">smol</Button>

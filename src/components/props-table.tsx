@@ -21,8 +21,8 @@ export function PropsTable({ content }: PropsTableProps) {
   }
 
   return (
-    <div className="mt-2">
-      <div className="border rounded-lg overflow-hidden -mx-4 mt-2">
+    <div className="mt-4">
+      <div className="border rounded-lg overflow-hidden mt-2">
         <table className="w-full text-xs">
           <thead className="bg-muted/50">
             <tr className="*:text-left *:py-3 *:px-4 *:font-medium *:text-foreground ">

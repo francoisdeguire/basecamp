@@ -6,9 +6,9 @@ links:
     href: "https://react-spectrum.adobe.com/react-aria/Button.html"
 ---
 
-<ComponentPreview component="button" example="demo" />
+<ComponentPreview component="button" example="_demo" />
 
-## When to use
+## Usage Guidelines
 
 A button is a user interface element that allows users to initiate actions or events, such as submitting forms, opening dialogs, canceling operations, or deleting items.
 
@@ -72,13 +72,17 @@ import { Button } from "@/components/ui/button"
 
 <ComponentPreview component="button" example="variants" />
 
-### Icons
-
-<ComponentPreview component="button" example="icon" />
-
 ### Sizes
 
 <ComponentPreview component="button" example="sizes" />
+
+### Destructive
+
+<ComponentPreview component="button" example="destructive" />
+
+### Icons
+
+<ComponentPreview component="button" example="icon" />
 
 ### Disabled
 
@@ -86,40 +90,45 @@ import { Button } from "@/components/ui/button"
 
 ### As Child
 
+When you want the interactive behavior of a button but another element, you can use the `asChild` prop to merge the props of the button with the child element.
+
 <ComponentPreview component="button" example="as-child" />
 
-## Props
+## Useful Props
 
 <PropsTable
   content={{
     variant: {
-      type: '"primary" | "secondary" | "ghost"',
+      type: '"primary" | "secondary" | "tertiary" | "link"',
       default: '"primary"',
       description: "The visual style of the button",
+    },
+    destructive: {
+      type: "boolean",
+      default: "false",
+      description: "Whether the button has destructive styling",
     },
     size: {
       type: '"sm" | "md" | "lg"',
       default: '"md"',
       description: "The size of the button",
     },
-    children: {
-      type: "React.ReactNode",
-      description: "The content to display inside the button",
+    asChild: {
+      type: "boolean",
+      default: "false",
+      description: "Whether the button is an asChild button",
     },
-    className: {
-      type: "string",
-      description: "Additional CSS classes to apply",
+    isDisabled: {
+      type: "boolean",
+      default: "false",
+      description: "Whether the button is disabled",
     },
-    onClick: {
+    onPress: {
       type: "() => void",
-      description: "Function called when the button is clicked",
+      description:
+        "Function called when the button is clicked or pressed (on mobile)",
     },
   }}
 />
 
-## Accessibility
-
-- Supports keyboard navigation
-- Includes focus indicators
-- Proper ARIA attributes
-- Screen reader friendly
+For a complete list of props, see the [React Aria Button](https://react-spectrum.adobe.com/react-aria/Button.html) documentation.

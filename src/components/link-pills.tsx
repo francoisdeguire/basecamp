@@ -19,7 +19,7 @@ export function LinkPills({ links, className }: LinkPillsProps) {
   }
 
   return (
-    <div className={cn("flex flex-wrap gap-2 -mx-2.5 mt-2", className)}>
+    <div className={cn("flex flex-wrap gap-2 -mx-1 mt-2", className)}>
       {links.map((link, index) => (
         <Link
           key={index}

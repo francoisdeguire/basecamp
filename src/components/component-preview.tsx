@@ -1,7 +1,9 @@
+"use client"
+
 import React from "react"
 import { ComponentSource } from "@/components/component-source"
 import { ComponentPreviewTabs } from "@/components/component-preview-tabs"
-import { dynamicImportMap } from "@/lib/dynamic-imports"
+import { dynamicImportMap } from "@/generated/dynamic-imports"
 
 export function ComponentPreview({
   component,

@@ -188,7 +188,7 @@ export default async function DocPage({ params }: PageProps) {
                     </a>
                   </h3>
                   {component.frontmatter.description && (
-                    <p className="text-sm text-muted-foreground mb-0">
+                    <p className="text-muted-foreground mb-0">
                       {component.frontmatter.description}
                     </p>
                   )}
@@ -213,7 +213,7 @@ export default async function DocPage({ params }: PageProps) {
                     </a>
                   </h3>
                   {primitive.frontmatter.description && (
-                    <p className="text-sm text-muted-foreground mb-0">
+                    <p className="text-muted-foreground mb-0">
                       {primitive.frontmatter.description}
                     </p>
                   )}

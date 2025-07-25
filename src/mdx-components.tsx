@@ -67,7 +67,7 @@ const sharedComponents = {
   h3: ({ className, ...props }: React.ComponentProps<"h3">) => (
     <h3
       className={cn(
-        "mt-8 scroll-m-24 text-xl font-medium tracking-tight",
+        "mt-8 scroll-m-24 text-xl font-medium tracking-tight [&+p]:!mt-2",
         className
       )}
       {...props}
@@ -102,15 +102,15 @@ const sharedComponents = {
   ),
   a: ({ className, ...props }: React.ComponentProps<"a">) => (
     <a
-      className={cn("font-medium underline underline-offset-4", className)}
+      className={cn(
+        "font-medium underline-offset-4 underline-red-500",
+        className
+      )}
       {...props}
     />
   ),
   p: ({ className, ...props }: React.ComponentProps<"p">) => (
-    <p
-      className={cn("leading-relaxed [&:not(:first-child)]:mt-6", className)}
-      {...props}
-    />
+    <p className={cn("[&:not(:first-child)]:mt-6", className)} {...props} />
   ),
   strong: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <strong className={cn("font-medium", className)} {...props} />
@@ -213,16 +213,18 @@ const sharedComponents = {
     )
   },
   code: ({ className, ...props }: React.ComponentProps<"code">) => {
-    // Check if this is inside a pre tag (code block) or standalone (inline code)
+    // Check if this is inline code vs code block
+    // Inline code typically has no className, or doesn't have syntax highlighting classes
     const isInlineCode =
-      typeof props.children === "string" && !className?.includes("language-")
+      !className ||
+      (!className.includes("language-") && !className.includes("shiki"))
 
     if (isInlineCode) {
       // Inline Code - when used outside of pre tags
       return (
         <code
           className={cn(
-            "bg-muted relative rounded-md px-[0.3rem] py-[0.2rem] font-mono text-[0.8rem] outline-none",
+            "bg-muted relative rounded-md px-[0.3rem] py-[0.2rem] font-mono text-[0.9rem] outline-none font-medium",
             className
           )}
           {...props}
@@ -234,7 +236,7 @@ const sharedComponents = {
     return (
       <code
         className={cn(
-          "font-mono text-sm",
+          "font-mono",
           // Ensure proper styling for highlighted code
           "[&_span]:font-mono",
           className

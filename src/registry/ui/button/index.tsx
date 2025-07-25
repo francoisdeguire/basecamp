@@ -17,18 +17,29 @@ import { type ButtonProps } from "./types"
  *
  * @example
  * ```tsx
- * // Standard button
- * <Button variant="default" size="lg">Click me</Button>
- *
- * // asChild pattern - merge props with child element
- * <Button asChild variant="outline">
- *   <a href="/home">Navigate home</a>
+ * <Button asChild variant="secondary">
+ *   <HomeIcon />
+ *   <a href="/">Go to home</a>
  * </Button>
  * ```
  */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
-    const classes = cn(buttonVariants({ variant, size }), className)
+  (
+    {
+      className,
+      variant,
+      destructive,
+      size,
+      asChild = false,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const classes = cn(
+      buttonVariants({ variant, size, destructive }),
+      className
+    )
 
     if (asChild && React.isValidElement(children)) {
       const { onPress, ...otherProps } = props
