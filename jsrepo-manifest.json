@@ -1,0 +1,90 @@
+{
+	"name": "@vol7/basecamp",
+	"version": "0.0.1",
+	"categories": [
+		{
+			"name": "ui",
+			"blocks": [
+				{
+					"name": "box",
+					"directory": "src/registry/ui",
+					"category": "ui",
+					"tests": false,
+					"docs": false,
+					"subdirectory": false,
+					"list": true,
+					"files": [
+						"box.tsx"
+					],
+					"localDependencies": [],
+					"_imports_": {},
+					"dependencies": [],
+					"devDependencies": []
+				},
+				{
+					"name": "button",
+					"directory": "src/registry/ui/button",
+					"category": "ui",
+					"tests": false,
+					"docs": false,
+					"subdirectory": true,
+					"list": true,
+					"files": [
+						"index.tsx",
+						"types.ts",
+						"variants.tsx"
+					],
+					"localDependencies": [],
+					"dependencies": [
+						"react-aria-components@^1.10.1",
+						"class-variance-authority@^0.7.1"
+					],
+					"devDependencies": [],
+					"_imports_": {}
+				},
+				{
+					"name": "tabs",
+					"directory": "src/registry/ui/tabs",
+					"category": "ui",
+					"tests": false,
+					"docs": false,
+					"subdirectory": true,
+					"list": true,
+					"files": [
+						"index.tsx",
+						"types.ts",
+						"variants.tsx"
+					],
+					"localDependencies": [],
+					"dependencies": [
+						"react-aria-components@^1.10.1",
+						"class-variance-authority@^0.7.1"
+					],
+					"devDependencies": [],
+					"_imports_": {}
+				},
+				{
+					"name": "tooltip",
+					"directory": "src/registry/ui/tooltip",
+					"category": "ui",
+					"tests": false,
+					"docs": false,
+					"subdirectory": true,
+					"list": true,
+					"files": [
+						"index.tsx",
+						"types.ts",
+						"variants.tsx"
+					],
+					"localDependencies": [],
+					"dependencies": [
+						"react-aria-components@^1.10.1",
+						"class-variance-authority@^0.7.1"
+					],
+					"devDependencies": [],
+					"_imports_": {}
+				}
+			]
+		}
+	]
+}

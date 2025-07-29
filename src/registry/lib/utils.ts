@@ -18,19 +18,3 @@ export function mergeRefs<T>(
     })
   }
 }
-
-// Error handling utilities
-export function createErrorBoundary(componentName: string) {
-  return {
-    logError: (error: Error, context?: string) => {
-      console.error(`[${componentName}] ${context || "Error"}:`, error)
-    },
-    createFallback: (message: string) => {
-      return {
-        componentName,
-        message,
-        className: "p-4 border border-red-200 bg-red-50 rounded-md",
-      }
-    },
-  }
-}
