@@ -14,7 +14,6 @@ import {
 import type { Metadata } from "next"
 import { DashboardTableOfContents } from "@/components/layout/TOC"
 import { mdxComponents } from "@/mdx-components"
-// Try different import format
 import rehypePrettyCode from "rehype-pretty-code"
 import rehypeSlug from "rehype-slug"
 

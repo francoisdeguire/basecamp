@@ -117,7 +117,7 @@ export function validateComponent(
   // Frontmatter validation
   const frontmatterValidation = validateFrontmatter(
     name,
-    frontmatter as Record<string, unknown>
+    frontmatter as unknown as Record<string, unknown>
   )
   errors.push(...frontmatterValidation.errors)
 
