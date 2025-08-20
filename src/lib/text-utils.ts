@@ -3,22 +3,7 @@
  * Consolidated from various files for better organization
  */
 
-// Component name formatting (from doc-utils.ts)
-export function formatComponentName(name: string): string {
-  return name
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (str) => str.toUpperCase())
-    .trim()
-}
-
-// URL-safe slug generation (from doc-utils.ts)
-export function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-}
+// Note: formatComponentName and slugify functions removed as they were unused
 
 // Header ID generation (from toc.ts)
 export function generateHeaderId(text: string): string {

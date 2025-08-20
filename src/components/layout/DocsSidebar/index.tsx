@@ -1,24 +1,16 @@
 import React from "react"
 import { CategoryTitle } from "./CategoryTitle"
-import { buildRegistry } from "@/lib/registry"
-import { getRootPages } from "@/lib/config"
-import { parseMDXFile } from "@/lib/mdx"
+import { getStaticRegistry, getStaticRootPages } from "@/lib/content"
 import { SidebarItem } from "./SidebarItem"
 
 export async function DocsSidebar() {
-  const registry = await buildRegistry()
-  const rootPages = getRootPages()
-
-  // Get root page titles
-  const rootPagesWithTitles = await Promise.all(
-    rootPages.map(async (page) => {
-      const mdxContent = await parseMDXFile(page.path)
-      return {
-        ...page,
-        title: mdxContent?.frontmatter.title || page.slug || "Introduction",
-      }
-    })
-  )
+  // Use static content instead of runtime filesystem operations
+  const registry = await getStaticRegistry()
+  const rootPagesWithTitles = getStaticRootPages().map((page) => ({
+    slug: page.slug,
+    path: page.path,
+    title: page.frontmatter?.title || page.slug || "Introduction",
+  }))
 
   return (
     <aside className="w-64 max-h-screen overflow-y-auto sticky top-16 pt-5">

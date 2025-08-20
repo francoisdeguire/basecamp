@@ -1,8 +1,7 @@
 import path from "path"
-import fs from "fs"
 
 /**
- * Central configuration for all directory paths used throughout the project.
+ * Central configuration for all directory paths used throughout the build process.
  * This eliminates hardcoded paths scattered across multiple files.
  */
 export const CONFIG = {
@@ -39,35 +38,3 @@ export const CONFIG = {
     "src/content/docs/(root)/index.mdx"
   ),
 } as const
-
-/**
- * Get a relative path from the project root
- */
-export function getRelativePath(absolutePath: string): string {
-  return path.relative(CONFIG.ROOT_DIR, absolutePath)
-}
-
-/**
- * Get an absolute path from a relative path (relative to project root)
- */
-export function getAbsolutePath(relativePath: string): string {
-  return path.join(CONFIG.ROOT_DIR, relativePath)
-}
-
-/**
- * Dynamically discover all root pages
- */
-export function getRootPages(): { slug: string; path: string }[] {
-  try {
-    const files = fs.readdirSync(CONFIG.DOCS_ROOT_DIR)
-    return files
-      .filter((file) => file.endsWith(".mdx"))
-      .map((file) => ({
-        slug: file === "index.mdx" ? "" : path.basename(file, ".mdx"),
-        path: path.join(CONFIG.DOCS_ROOT_DIR, file),
-      }))
-  } catch (error) {
-    console.error("Error reading root pages directory:", error)
-    return []
-  }
-}

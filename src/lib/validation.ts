@@ -2,8 +2,8 @@ import type {
   ValidationError,
   ValidationResult,
   ComponentFrontmatter,
+  RegistryData,
 } from "@/types/component"
-import type { RegistryData } from "./registry"
 
 /**
  * Centralized validation logic for components, frontmatter, and registry data

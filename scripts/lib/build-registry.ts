@@ -1,15 +1,11 @@
 import path from "path"
-import { findMDXFiles, parseMDXFile } from "./mdx"
-import { ComponentInfo } from "@/types/component"
+import { findMDXFiles, parseMDXFile } from "./build-mdx"
+import { ComponentInfo, RegistryData } from "../../src/types/component"
 import { CONFIG } from "./config"
 
-export interface RegistryData {
-  components: ComponentInfo[]
-  primitives: ComponentInfo[]
-  totalCount: number
-  lastUpdated: string
-}
-
+/**
+ * Build component registry from MDX files (BUILD TIME ONLY)
+ */
 export async function buildRegistry(): Promise<RegistryData> {
   const componentFiles = findMDXFiles(CONFIG.COMPONENTS_DOCS_DIR)
   const primitiveFiles = findMDXFiles(CONFIG.PRIMITIVES_DOCS_DIR)
@@ -57,17 +53,3 @@ export async function buildRegistry(): Promise<RegistryData> {
     lastUpdated: new Date().toISOString(),
   }
 }
-
-// DEPRECATED: Use getComponentBySlug from content.ts instead for better performance
-// This function builds the registry at runtime which is slow
-export async function getComponentBySlugRuntime(
-  slug: string,
-  type: "ui" | "primitive"
-): Promise<ComponentInfo | null> {
-  const registry = await buildRegistry()
-  const components = type === "ui" ? registry.components : registry.primitives
-  return components.find((component) => component.slug === slug) || null
-}
-
-// Re-export validation utilities from centralized validation module
-export { validateRegistry } from "./validation"

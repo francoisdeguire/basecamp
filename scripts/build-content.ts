@@ -1,30 +1,30 @@
 import { promises as fs } from "fs"
 import path from "path"
-import { CONFIG } from "../src/lib/config"
-import { buildRegistry } from "../src/lib/registry"
-import { getRootPages } from "../src/lib/config"
-import { parseMDXFile } from "../src/lib/mdx"
+import { CONFIG } from "./lib/config"
+import { buildRegistry } from "./lib/build-registry"
+import { getRootPages } from "./lib/build-config"
+import { parseMDXFile } from "./lib/build-mdx"
 
 /**
  * Generate static content JSON to replace runtime fs calls
  * This eliminates the 5+ second page load times caused by fs operations
  */
 async function buildContentJSON() {
-  console.log("📄 Generating static content JSON...")
-
   try {
     // Generate registry data (components + primitives) with content
     const registry = await buildRegistry()
 
-    // Add content to each component
-    for (const component of [...registry.components, ...registry.primitives]) {
+    // Add content to each component (extend ComponentInfo with content field)
+    const allComponents = [...registry.components, ...registry.primitives]
+
+    for (let i = 0; i < allComponents.length; i++) {
+      const component = allComponents[i]
       const mdxContent = await parseMDXFile(component.path)
       if (mdxContent) {
-        ;(component as any).content = mdxContent.content
+        // Type-safe content addition
+        Object.assign(component, { content: mdxContent.content })
       }
     }
-
-    console.log(`✅ Built registry with ${registry.totalCount} components`)
 
     // Generate root pages data
     const rootPages = getRootPages()
@@ -41,8 +41,6 @@ async function buildContentJSON() {
         })
       }
     }
-
-    console.log(`✅ Built ${rootPagesData.length} root pages`)
 
     // Combine all content data
     const contentData = {
@@ -62,10 +60,8 @@ async function buildContentJSON() {
       "utf-8"
     )
 
-    console.log("🚀 Static content JSON generated successfully!")
-    console.log(`📁 File: ${path.relative(CONFIG.ROOT_DIR, contentFile)}`)
     console.log(
-      `📊 Size: ${(JSON.stringify(contentData).length / 1024).toFixed(1)}KB`
+      `📄 Generated content.json (${registry.totalCount} components, ${rootPagesData.length} pages, ${(JSON.stringify(contentData).length / 1024).toFixed(1)}KB)`
     )
   } catch (error) {
     console.error("💥 Failed to generate content JSON:", error)

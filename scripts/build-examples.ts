@@ -1,6 +1,6 @@
 import { promises as fs, watch } from "fs"
 import path from "path"
-import { CONFIG } from "../src/lib/config"
+import { CONFIG } from "./lib/config"
 import { highlightCode } from "../src/lib/highlight-code"
 
 // Cache for file modification times to avoid re-processing unchanged files
@@ -79,7 +79,7 @@ async function processFile(
 
     return { rawCode, highlightedCode }
   } catch (error) {
-    console.warn(`😤 ${filePath} is being difficult rn (skill issue?):`, error)
+    console.warn(`⚠️ Failed to process file ${filePath}:`, error)
     const errorCode = `// Error loading code from ${filePath}`
     const errorHighlighted = `<pre><code>${errorCode}</code></pre>`
 
@@ -136,7 +136,8 @@ async function discoverExamples(): Promise<Record<string, string>> {
       }
     }
   } catch (error) {
-    console.error("💀 Example discovery went sideways (big oof):", error)
+    console.error("❌ Failed to discover examples:", error)
+    throw new Error(`Example discovery failed: ${error}`)
   }
 
   return exampleFileMap
@@ -179,7 +180,8 @@ async function discoverRegistryFiles(): Promise<Record<string, string>> {
         }
       }
     } catch (error) {
-      console.error(`🤡 Directory scan failed spectacularly ${dirPath}:`, error)
+      console.error(`❌ Failed to scan directory ${dirPath}:`, error)
+      throw new Error(`Directory scan failed: ${error}`)
     }
   }
 
@@ -188,46 +190,64 @@ async function discoverRegistryFiles(): Promise<Record<string, string>> {
 }
 
 /**
- * Process all registry files and add to combined maps
+ * Process all registry files and add to combined maps (with parallel processing)
  */
 async function processRegistry(
   registryFileMap: Record<string, string>,
   combinedCodeMap: Record<string, string>,
   combinedHighlightedMap: Record<string, string>
 ) {
-  console.log("✨ Yassifying the registry")
-  for (const [key, filePath] of Object.entries(registryFileMap)) {
-    // Determine language from file extension
-    let language = "tsx"
-    if (filePath.endsWith(".ts")) {
-      language = "typescript"
-    } else if (filePath.endsWith(".css")) {
-      language = "css"
+  // Process files in parallel for better performance
+  const processingPromises = Object.entries(registryFileMap).map(
+    async ([key, filePath]) => {
+      // Determine language from file extension
+      let language = "tsx"
+      if (filePath.endsWith(".ts")) {
+        language = "typescript"
+      } else if (filePath.endsWith(".css")) {
+        language = "css"
+      }
+
+      const { rawCode, highlightedCode } = await processFile(filePath, language)
+
+      // Use "registry:" prefix to distinguish from example files
+      const prefixedKey = `registry:${key}`
+      return { prefixedKey, rawCode, highlightedCode }
     }
+  )
 
-    const { rawCode, highlightedCode } = await processFile(filePath, language)
+  const results = await Promise.all(processingPromises)
 
-    // Use "registry:" prefix to distinguish from example files
-    const prefixedKey = `registry:${key}`
+  // Add results to combined maps
+  for (const { prefixedKey, rawCode, highlightedCode } of results) {
     combinedCodeMap[prefixedKey] = rawCode
     combinedHighlightedMap[prefixedKey] = highlightedCode
   }
 }
 
 /**
- * Process all example files and add to combined maps
+ * Process all example files and add to combined maps (with parallel processing)
  */
 async function processExamples(
   exampleFileMap: Record<string, string>,
   combinedCodeMap: Record<string, string>,
   combinedHighlightedMap: Record<string, string>
 ) {
-  console.log("✨ Yassifying the examples")
-  for (const [key, filePath] of Object.entries(exampleFileMap)) {
-    const { rawCode, highlightedCode } = await processFile(filePath, "tsx")
+  // Process files in parallel for better performance
+  const processingPromises = Object.entries(exampleFileMap).map(
+    async ([key, filePath]) => {
+      const { rawCode, highlightedCode } = await processFile(filePath, "tsx")
 
-    // Use "example:" prefix to distinguish from registry files
-    const prefixedKey = `example:${key}`
+      // Use "example:" prefix to distinguish from registry files
+      const prefixedKey = `example:${key}`
+      return { prefixedKey, rawCode, highlightedCode }
+    }
+  )
+
+  const results = await Promise.all(processingPromises)
+
+  // Add results to combined maps
+  for (const { prefixedKey, rawCode, highlightedCode } of results) {
     combinedCodeMap[prefixedKey] = rawCode
     combinedHighlightedMap[prefixedKey] = highlightedCode
   }
@@ -395,16 +415,14 @@ function toPascalCase(str: string): string {
 }
 
 async function buildExamples() {
-  console.log("🍳 Time to cook")
-
   // Discover all examples and registry files
   const exampleFileMap = await discoverExamples()
   const registryFileMap = await discoverRegistryFiles()
 
   console.log(
-    `🎯 Locked onto ${Object.keys(registryFileMap).length} registry files and ${
+    `🔨 Building ${Object.keys(registryFileMap).length} registry files and ${
       Object.keys(exampleFileMap).length
-    } examples`
+    } examples...`
   )
 
   // Initialize combined maps
@@ -498,13 +516,9 @@ ${(() => {
     "utf-8"
   )
 
-  console.log("🔒 Code registry is LOCKED IN")
   console.log(
-    `📈 Generated ${
-      Object.keys(combinedCodeMap).length
-    } entries (shits bussin fr)`
+    `✅ Generated ${Object.keys(combinedCodeMap).length} code entries`
   )
-  console.log(`🗺️  Map files locked and loaded chief`)
 
   return { exampleFileMap, registryFileMap }
 }
@@ -513,7 +527,7 @@ ${(() => {
 const isWatchMode = process.argv.includes("--watch")
 
 if (isWatchMode) {
-  console.log("👁️👄👁️ On guard duty... these files can't hide from me")
+  console.log("👀 Watch mode enabled")
 
   // Build initially and get the file paths
   let currentExampleFileMap: Record<string, string> = {}
@@ -534,7 +548,7 @@ if (isWatchMode) {
       { recursive: true },
       async (eventType, filename) => {
         if (filename && filename.endsWith(".tsx")) {
-          console.log(`🚨 ${filename} just had a glow-up`)
+          console.log(`🔄 ${filename}`)
           await rebuildAndUpdateWatchers()
         }
       }
@@ -551,9 +565,7 @@ if (isWatchMode) {
             filename.endsWith(".ts") ||
             filename.endsWith(".css"))
         ) {
-          console.log(
-            `🔄 ${filename} said 'watch me transform' and did exactly that`
-          )
+          console.log(`🔧 ${filename}`)
           await rebuildAndUpdateWatchers()
         }
       }
@@ -573,14 +585,10 @@ if (isWatchMode) {
     )
 
     if (newRegistryFiles.length > 0) {
-      console.log(
-        `🎁 Christmas came early! Found ${newRegistryFiles.length} new registry files`
-      )
+      console.log(`📁 +${newRegistryFiles.length} registry files`)
     }
     if (newExampleFiles.length > 0) {
-      console.log(
-        `🌟 ${newExampleFiles.length} new examples just dropped and they're looking fresh`
-      )
+      console.log(`📋 +${newExampleFiles.length} examples`)
     }
 
     currentExampleFileMap = exampleFileMap

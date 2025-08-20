@@ -43,3 +43,11 @@ export interface ValidationResult {
   isValid: boolean
   errors: ValidationError[]
 }
+
+// Registry types
+export interface RegistryData {
+  components: ComponentInfo[]
+  primitives: ComponentInfo[]
+  totalCount: number
+  lastUpdated: string
+}
