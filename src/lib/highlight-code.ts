@@ -1,5 +1,6 @@
 import { codeToHtml } from "shiki"
 import type { ShikiTransformer } from "shiki"
+import { escapeHtml } from "./text-utils"
 
 export const transformers = [
   {
@@ -55,18 +56,6 @@ export const transformers = [
     },
   },
 ] as ShikiTransformer[]
-
-/**
- * Simple HTML escape utility for server-side use
- */
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
-}
 
 /**
  * Creates line number transformers for code highlighting

@@ -1,6 +1,9 @@
 "use client"
 
-import { getExampleCode, getExampleHighlightedCode } from "@/lib/code-extractor"
+import {
+  getExampleCode,
+  getExampleHighlightedCode,
+} from "@/generated/code-extractor"
 import { cn } from "@/lib/utils"
 import { CopyButton } from "@/components/copy-button"
 import { FileIcon } from "lucide-react"

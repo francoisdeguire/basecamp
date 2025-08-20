@@ -1,7 +1,7 @@
 import {
   getRegistryCode,
   getRegistryHighlightedCode,
-} from "@/lib/code-extractor"
+} from "@/generated/code-extractor"
 import { SourceCodeClient } from "./source-code-client"
 
 interface SourceCodeProps {

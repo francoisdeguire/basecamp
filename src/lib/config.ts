@@ -22,9 +22,16 @@ export const CONFIG = {
   EXAMPLES_DIR: path.join(process.cwd(), "src/registry/examples"),
   UI_DIR: path.join(process.cwd(), "src/registry/ui"),
 
-  // Generated files
-  CODE_EXTRACTOR_FILE: path.join(process.cwd(), "src/lib/code-extractor.ts"),
-  DYNAMIC_IMPORTS_FILE: path.join(process.cwd(), "src/lib/dynamic-imports.ts"),
+  // Generated files directory
+  GENERATED_DIR: path.join(process.cwd(), "src/generated"),
+  CODE_EXTRACTOR_FILE: path.join(
+    process.cwd(),
+    "src/generated/code-extractor.ts"
+  ),
+  DYNAMIC_IMPORTS_FILE: path.join(
+    process.cwd(),
+    "src/generated/dynamic-imports.ts"
+  ),
 
   // Special files
   ROOT_INDEX_FILE: path.join(

@@ -1,3 +1,5 @@
+import { generateHeaderId } from "./text-utils"
+
 export interface TocItem {
   id: string
   text: string
@@ -15,12 +17,7 @@ export function extractTocFromMdx(content: string): TocItem[] {
     if (headerMatch) {
       const level = headerMatch[1].length
       const text = headerMatch[2].trim()
-      const id = text
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "") // Remove special characters
-        .replace(/\s+/g, "-") // Replace spaces with hyphens
-        .replace(/-+/g, "-") // Replace multiple hyphens with single
-        .replace(/^-|-$/g, "") // Remove leading/trailing hyphens
+      const id = generateHeaderId(text)
 
       flatToc.push({ id, text, level })
     }
@@ -54,11 +51,5 @@ function buildHierarchicalToc(flatToc: TocItem[]): TocItem[] {
   return toc
 }
 
-export function generateHeaderId(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "") // Remove special characters
-    .replace(/\s+/g, "-") // Replace spaces with hyphens
-    .replace(/-+/g, "-") // Replace multiple hyphens with single
-    .replace(/^-|-$/g, "") // Remove leading/trailing hyphens
-}
+// Re-export from text-utils for backward compatibility
+export { generateHeaderId } from "./text-utils"

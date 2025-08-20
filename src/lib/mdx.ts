@@ -2,7 +2,7 @@ import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
 import { ComponentFrontmatter, ValidationResult } from "@/types/component"
-import { validateFrontmatter } from "@/lib/doc-utils"
+import { validateFrontmatter } from "@/lib/validation"
 import { CONFIG } from "@/lib/config"
 
 // rehype-pretty-code configuration

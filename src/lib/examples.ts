@@ -1,5 +1,8 @@
-import { getExampleCode } from "./code-extractor"
-import { dynamicImportMap, componentExamplesMap } from "./dynamic-imports"
+import { getExampleCode } from "@/generated/code-extractor"
+import {
+  dynamicImportMap,
+  componentExamplesMap,
+} from "@/generated/dynamic-imports"
 
 export interface ExampleInfo {
   name: string

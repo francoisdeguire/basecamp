@@ -58,7 +58,9 @@ export async function buildRegistry(): Promise<RegistryData> {
   }
 }
 
-export async function getComponentBySlug(
+// DEPRECATED: Use getComponentBySlug from content.ts instead for better performance
+// This function builds the registry at runtime which is slow
+export async function getComponentBySlugRuntime(
   slug: string,
   type: "ui" | "primitive"
 ): Promise<ComponentInfo | null> {
@@ -67,38 +69,5 @@ export async function getComponentBySlug(
   return components.find((component) => component.slug === slug) || null
 }
 
-export function validateRegistry(registry: RegistryData): {
-  isValid: boolean
-  errors: string[]
-} {
-  const errors: string[] = []
-
-  // Check for duplicate slugs
-  const allSlugs = [
-    ...registry.components.map((c) => c.slug),
-    ...registry.primitives.map((c) => c.slug),
-  ]
-
-  const duplicateSlugs = allSlugs.filter(
-    (slug, index) => allSlugs.indexOf(slug) !== index
-  )
-  if (duplicateSlugs.length > 0) {
-    errors.push(`Duplicate slugs found: ${duplicateSlugs.join(", ")}`)
-  }
-
-  // Check for missing required fields
-  const allComponents = [...registry.components, ...registry.primitives]
-  for (const component of allComponents) {
-    if (!component.frontmatter.title) {
-      errors.push(`Missing title for component: ${component.name}`)
-    }
-    if (!component.frontmatter.description) {
-      errors.push(`Missing description for component: ${component.name}`)
-    }
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-  }
-}
+// Re-export validation utilities from centralized validation module
+export { validateRegistry } from "./validation"
