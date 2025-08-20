@@ -6,8 +6,12 @@ import { extractTocFromMdx } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
 import { LinkPills } from "@/components/link-pills"
-import { buildRegistry } from "@/lib/registry"
-import { getRootPages } from "@/lib/config"
+import {
+  getStaticRegistry,
+  getStaticRootPages,
+  getRootPageBySlug,
+  getComponentBySlug,
+} from "@/lib/content"
 import type { Metadata } from "next"
 import { DashboardTableOfContents } from "@/components/layout/TOC"
 import { mdxComponents } from "@/mdx-components"
@@ -32,7 +36,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
 
   // Handle category listing pages FIRST
   if (slug === "components") {
-    const registry = await buildRegistry()
+    const registry = await getStaticRegistry()
     return {
       title: "Components",
       description:
@@ -48,7 +52,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
   }
 
   if (slug === "primitives") {
-    const registry = await buildRegistry()
+    const registry = await getStaticRegistry()
     return {
       title: "Primitives",
       description:
@@ -65,17 +69,17 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
 
   // Handle root docs pages
   if (!slug || !slug.includes("/")) {
-    const rootPages = getRootPages()
     const targetSlug = slug || ""
-    const rootPage = rootPages.find((page) => page.slug === targetSlug)
+    const rootPage = getRootPageBySlug(targetSlug)
 
     if (!rootPage) {
       return null
     }
 
-    const mdxContent = await parseMDXFile(rootPage.path)
-    if (!mdxContent) {
-      return null
+    // Root page data is already parsed in the JSON
+    const mdxContent = {
+      frontmatter: rootPage.frontmatter,
+      content: rootPage.content,
     }
 
     return {
@@ -98,19 +102,18 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
     return null
   }
 
-  // Use registry for better content discovery (like shadcn-ui)
-  const registry = await buildRegistry()
-  const components =
-    category === "components" ? registry.components : registry.primitives
-  const component = components.find((c) => c.slug === componentName)
+  // Use static registry for better performance
+  const componentType = category === "components" ? "ui" : "primitive"
+  const component = await getComponentBySlug(componentName, componentType)
 
   if (!component) {
     return null
   }
 
-  const mdxContent = await parseMDXFile(component.path)
-  if (!mdxContent) {
-    return null
+  // Component data is already parsed in the JSON
+  const mdxContent = {
+    frontmatter: component.frontmatter,
+    content: (component as any).content || "",
   }
 
   return {
