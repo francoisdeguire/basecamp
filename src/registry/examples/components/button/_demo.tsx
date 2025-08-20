@@ -1,4 +1,4 @@
-import { Button } from "@/registry/ui/button"
+import { Button } from "@/components/registry-client"
 import { CheckIcon, TrashIcon } from "lucide-react"
 
 export function ButtonDemo() {

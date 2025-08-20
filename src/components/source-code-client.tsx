@@ -4,7 +4,7 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { CopyButton } from "@/components/copy-button"
 import { ChevronDown, FileIcon } from "lucide-react"
-import { Button } from "@/registry/ui/button"
+import { Button } from "@/components/registry-client"
 
 interface SourceCodeClientProps {
   filename: string

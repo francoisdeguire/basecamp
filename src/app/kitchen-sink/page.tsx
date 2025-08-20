@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/registry/ui/button"
+import { Button } from "@/components/registry-client"
 
 export default function HomePage() {
   return (

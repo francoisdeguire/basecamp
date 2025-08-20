@@ -2,7 +2,7 @@
 
 import React from "react"
 import { ComponentProp } from "@/types/component"
-import { Tooltip, TooltipTrigger } from "@/registry/ui/tooltip"
+import { Tooltip, TooltipTrigger } from "@/components/registry-client"
 import { CircleHelpIcon } from "lucide-react"
 import { Focusable } from "react-aria-components"
 import { cn } from "@/lib/utils"

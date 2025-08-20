@@ -1,4 +1,6 @@
-import { Button } from "@/registry/ui/button"
+"use client"
+
+import { Button } from "@/components/registry-client"
 import Link from "next/link"
 
 export const SidebarItem = ({

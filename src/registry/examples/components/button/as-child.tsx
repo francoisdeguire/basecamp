@@ -1,4 +1,4 @@
-import { Button } from "@/registry/ui/button"
+import { Button } from "@/components/registry-client"
 import Link from "next/link"
 
 export function ButtonAsChild() {

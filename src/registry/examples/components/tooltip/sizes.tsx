@@ -1,5 +1,5 @@
-import { Button } from "@/registry/ui/button"
-import { Tooltip, TooltipTrigger } from "@/registry/ui/tooltip"
+import { Button } from "@/components/registry-client"
+import { Tooltip, TooltipTrigger } from "@/components/registry-client"
 
 export default function SizesExample() {
   return (

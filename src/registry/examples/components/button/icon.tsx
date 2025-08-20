@@ -1,4 +1,4 @@
-import { Button } from "@/registry/ui/button"
+import { Button } from "@/components/registry-client"
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
 
 export function ButtonWithIcon() {

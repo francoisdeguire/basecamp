@@ -1,4 +1,4 @@
-import { Tabs, TabList, Tab, TabPanel } from "@/registry/ui/tabs"
+import { Tabs, TabList, Tab, TabPanel } from "@/components/registry-client"
 
 export default function BasicExample() {
   return (

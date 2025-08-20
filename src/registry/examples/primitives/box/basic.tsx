@@ -1,4 +1,4 @@
-import { Box } from "@/registry/ui/box"
+import { Box } from "@/components/registry-client"
 
 export default function BasicExample() {
   return (

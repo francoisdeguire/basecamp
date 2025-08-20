@@ -4,8 +4,8 @@ import * as React from "react"
 import { CheckIcon, ClipboardIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/registry/ui/button"
-import { Tooltip, TooltipTrigger } from "@/registry/ui/tooltip"
+import { Button } from "@/components/registry-client"
+import { Tooltip, TooltipTrigger } from "@/components/registry-client"
 
 export function copyToClipboardWithMeta(value: string) {
   navigator.clipboard.writeText(value)
@@ -48,7 +48,7 @@ export function CopyButton({
     <TooltipTrigger
       delay={100}
       isOpen={hasCopied ? true : undefined}
-      onOpenChange={(open) => {
+      onOpenChange={(open: boolean) => {
         // Only prevent closing if we're showing the copied state
         if (hasCopied && !open) {
           return // Prevent closing while showing "Copied"

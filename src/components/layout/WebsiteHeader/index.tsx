@@ -1,8 +1,10 @@
+"use client"
+
 import Image from "next/image"
 import React from "react"
 import logo from "@/public/logo.svg"
 import Link from "next/link"
-import { Button } from "@/registry/ui/button"
+import { Button } from "@/components/registry-client"
 import { ThemeSwitcher } from "@/components/theme-switcher"
 
 export function WebsiteHeader() {

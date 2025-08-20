@@ -3,7 +3,7 @@
 import React from "react"
 import { ComponentSource } from "@/components/component-source"
 import { ComponentPreviewTabs } from "@/components/component-preview-tabs"
-import { dynamicImportMap } from "@/generated/dynamic-imports"
+import { Index } from "@/registry/__index__"
 
 export function ComponentPreview({
   component,
@@ -14,10 +14,10 @@ export function ComponentPreview({
   component: string
   example: string
 }) {
-  const key = `${component}-${example}`
-  const importFn = dynamicImportMap[key]
+  const key = `${component}-${example}` as keyof typeof Index
+  const Component = Index[key]
 
-  if (!importFn) {
+  if (!Component) {
     return (
       <p className="text-muted-foreground text-sm">
         Component{" "}
@@ -29,31 +29,12 @@ export function ComponentPreview({
     )
   }
 
-  const Component = React.lazy(async () => {
-    const importedModule = await importFn()
-    // Find the first export that's a component (capitalized function)
-    const exportedComponent = Object.values(importedModule).find(
-      (exp): exp is React.ComponentType =>
-        typeof exp === "function" &&
-        typeof exp.name === "string" &&
-        /^[A-Z]/.test(exp.name)
-    )
-
-    if (!exportedComponent) {
-      throw new Error(`No valid component export found in ${key}`)
-    }
-
-    return { default: exportedComponent }
-  })
-
   return (
-    <React.Suspense fallback={null}>
-      <ComponentPreviewTabs
-        className={className}
-        component={<Component />}
-        source={<ComponentSource name={component} example={example} />}
-        {...props}
-      />
-    </React.Suspense>
+    <ComponentPreviewTabs
+      className={className}
+      component={<Component />}
+      source={<ComponentSource name={component} example={example} />}
+      {...props}
+    />
   )
 }

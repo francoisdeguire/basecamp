@@ -17,7 +17,7 @@ interface ComponentSourceProps {
  * Processes code by replacing registry imports for display purposes
  */
 function processCode(code: string): string {
-  return code.replace(/@\/registry\/ui\//g, "@/components/ui/")
+  return code.replace(/@\/registry\/ui\//g, "@/components/registry-client")
 }
 
 function ErrorDisplay({ message }: { message: string }) {

@@ -8,7 +8,7 @@ import { ComponentSource } from "@/components/component-source"
 import { SourceCode } from "@/components/source-code"
 import { CopyButton } from "@/components/copy-button"
 import { PropsTable } from "@/components/props-table"
-import { Button } from "@/registry/ui/button"
+import { Button } from "@/components/registry-client"
 import { CodeTabs, CodeTabsContent } from "./components/code-tabs"
 import { LinkPills } from "@/components/link-pills"
 
