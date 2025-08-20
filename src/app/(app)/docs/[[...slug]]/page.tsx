@@ -1,14 +1,13 @@
 import { notFound } from "next/navigation"
 import { MDXRemote } from "next-mdx-remote-client/rsc"
 import type { MDXComponents } from "mdx/types"
-import { parseMDXFile, rehypePrettyCodeOptions } from "@/lib/mdx"
+import { rehypePrettyCodeOptions } from "@/lib/mdx"
 import { extractTocFromMdx } from "@/lib/toc"
 import { ComponentPreview } from "@/components/component-preview"
 import { PropsTable } from "@/components/props-table"
 import { LinkPills } from "@/components/link-pills"
 import {
   getStaticRegistry,
-  getStaticRootPages,
   getRootPageBySlug,
   getComponentBySlug,
 } from "@/lib/content"
@@ -113,7 +112,7 @@ async function getDocFromParams({ params }: { params: { slug?: string[] } }) {
   // Component data is already parsed in the JSON
   const mdxContent = {
     frontmatter: component.frontmatter,
-    content: (component as any).content || "",
+    content: component.content || "",
   }
 
   return {
