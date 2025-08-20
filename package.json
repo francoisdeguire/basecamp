@@ -2,10 +2,7 @@
   "name": "basecamp-monorepo",
   "version": "0.1.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "packageManager": "npm@10.8.1",
+  "packageManager": "pnpm@10.15.0",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",

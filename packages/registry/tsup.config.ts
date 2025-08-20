@@ -6,6 +6,7 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   clean: true,
+  silent: true,
   external: ["react", "react-dom"],
   banner: {
     js: '"use client";',
