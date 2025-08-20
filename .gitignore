@@ -25,7 +25,6 @@
 /dist/
 */dist/
 **/dist/
-**/build/
 **/build/dist/
 
 # build tools
