@@ -10,10 +10,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
-    "./styles": "./dist/styles.css"
+    "./theme": "./src/theme.css"
   },
   "files": [
     "dist",
+    "src/theme.css",
     "README.md"
   ],
   "scripts": {
