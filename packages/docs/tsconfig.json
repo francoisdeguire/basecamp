@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["./*"],
+      "@/public/*": ["../public/*"],
+      "@basecamp/registry": ["../registry/src"],
+      "@basecamp/registry/*": ["../registry/src/*"]
+    },
+    "target": "ES2017",
+    "incremental": true
+  },
+  "include": ["next-env.d.ts", "src/**/*", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
+}

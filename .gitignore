@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/packages/*/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -15,13 +16,26 @@
 
 # next.js
 /.next/
+*/.next/
+**/.next/
 /out/
 
 # production
 /build
+/dist/
+*/dist/
+**/dist/
+**/build/
+**/build/dist/
+
+# build tools
+.turbo/
+**/.turbo/
 
 # generated files
 /src/generated
+*/src/generated
+**/src/generated
 
 # misc
 .DS_Store
