@@ -3,7 +3,7 @@ import type {
   ValidationResult,
   ComponentFrontmatter,
   RegistryData,
-} from "@/shared/types/component"
+} from "@/lib/types"
 
 /**
  * Centralized validation logic for components, frontmatter, and registry data

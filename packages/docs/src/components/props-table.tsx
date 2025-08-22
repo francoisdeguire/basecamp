@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { ComponentProp } from "@/shared/types/component"
+import { ComponentProp } from "@/lib/types"
 import { Tooltip, TooltipTrigger } from "@/components/registry-client"
 import { CircleHelpIcon } from "lucide-react"
 import { Focusable } from "react-aria-components"

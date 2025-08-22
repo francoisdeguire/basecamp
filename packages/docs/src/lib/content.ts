@@ -1,6 +1,6 @@
 // Static content data - replaces runtime fs calls for much faster performance
 import contentData from "@/generated/content.json"
-import type { ComponentInfo, ComponentFrontmatter } from "@/shared/types/component"
+import type { ComponentInfo, ComponentFrontmatter } from "@/lib/types"
 
 // Extended component info that includes the content field from generated data
 export interface ComponentInfoWithContent extends ComponentInfo {

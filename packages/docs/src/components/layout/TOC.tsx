@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { TocItem } from "@/lib/toc"
-import { cn } from "@/shared/utils"
+import { cn } from "@/lib/utils"
 import { ArrowUpRight } from "lucide-react"
 
 interface TocProps {
