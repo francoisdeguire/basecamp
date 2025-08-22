@@ -1,7 +1,7 @@
 import * as React from "react"
 import { forwardRef } from "react"
 import { Button as AriaButton } from "react-aria-components"
-import { cn } from "../utils"
+import { cn } from "../../lib/utils"
 import { buttonVariants } from "./variants"
 import { type ButtonProps } from "./types"
 

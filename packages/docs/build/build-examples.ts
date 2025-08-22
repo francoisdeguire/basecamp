@@ -90,59 +90,6 @@ async function processFile(
   }
 }
 
-// Dynamic example discovery
-async function discoverExamples(): Promise<Record<string, string>> {
-  const exampleFileMap: Record<string, string> = {}
-
-  try {
-    // Get all categories (components, primitives, etc.)
-    const categories = await fs.readdir(CONFIG.EXAMPLES_DIR, {
-      withFileTypes: true,
-    })
-
-    for (const category of categories) {
-      if (!category.isDirectory()) continue
-
-      const categoryPath = path.join(CONFIG.EXAMPLES_DIR, category.name)
-
-      // Get all components in this category
-      const components = await fs.readdir(categoryPath, { withFileTypes: true })
-
-      for (const component of components) {
-        if (!component.isDirectory()) continue
-
-        const componentPath = path.join(categoryPath, component.name)
-
-        // Get all example files for this component
-        const examples = await fs.readdir(componentPath, {
-          withFileTypes: true,
-        })
-
-        for (const example of examples) {
-          if (!example.isFile() || !example.name.endsWith(".tsx")) continue
-
-          // Generate key: component-example (without .tsx extension)
-          const exampleName = example.name.replace(".tsx", "")
-          const key = `${component.name}-${exampleName}`
-
-          // Store relative path from project root
-          const relativePath = path.relative(
-            CONFIG.ROOT_DIR,
-            path.join(componentPath, example.name)
-          )
-
-          exampleFileMap[key] = relativePath
-        }
-      }
-    }
-  } catch (error) {
-    console.error("❌ Failed to discover examples:", error)
-    throw new Error(`Example discovery failed: ${error}`)
-  }
-
-  return exampleFileMap
-}
-
 // Dynamic registry UI file discovery
 async function discoverRegistryFiles(): Promise<Record<string, string>> {
   const registryFileMap: Record<string, string> = {}
@@ -174,8 +121,8 @@ async function discoverRegistryFiles(): Promise<Record<string, string>> {
           // Generate key: path without .tsx/.ts/.css extension
           const key = itemKey.replace(/\.(tsx?|css)$/, "")
 
-          // Store relative path from project root
-          const relativePath = path.relative(CONFIG.ROOT_DIR, itemPath)
+          // Store relative path from registry root
+          const relativePath = path.relative(CONFIG.REGISTRY_ROOT_DIR, itemPath)
           registryFileMap[key] = relativePath
         }
       }
@@ -185,7 +132,26 @@ async function discoverRegistryFiles(): Promise<Record<string, string>> {
     }
   }
 
-  await scanDirectory(CONFIG.REGISTRY_DIR)
+  // Scan the ui/ subdirectory for components
+  const uiDir = path.join(CONFIG.REGISTRY_DIR, "ui")
+  await scanDirectory(uiDir, "ui")
+
+  // Also include lib/ and theme/ directories
+  const libDir = path.join(CONFIG.REGISTRY_DIR, "lib")
+  const themeDir = path.join(CONFIG.REGISTRY_DIR, "theme")
+
+  try {
+    await scanDirectory(libDir, "lib")
+  } catch {
+    console.warn("⚠️ No lib directory found")
+  }
+
+  try {
+    await scanDirectory(themeDir, "theme")
+  } catch {
+    console.warn("⚠️ No theme directory found")
+  }
+
   return registryFileMap
 }
 
@@ -212,34 +178,6 @@ async function processRegistry(
 
       // Use "registry:" prefix to distinguish from example files
       const prefixedKey = `registry:${key}`
-      return { prefixedKey, rawCode, highlightedCode }
-    }
-  )
-
-  const results = await Promise.all(processingPromises)
-
-  // Add results to combined maps
-  for (const { prefixedKey, rawCode, highlightedCode } of results) {
-    combinedCodeMap[prefixedKey] = rawCode
-    combinedHighlightedMap[prefixedKey] = highlightedCode
-  }
-}
-
-/**
- * Process all example files and add to combined maps (with parallel processing)
- */
-async function processExamples(
-  exampleFileMap: Record<string, string>,
-  combinedCodeMap: Record<string, string>,
-  combinedHighlightedMap: Record<string, string>
-) {
-  // Process files in parallel for better performance
-  const processingPromises = Object.entries(exampleFileMap).map(
-    async ([key, filePath]) => {
-      const { rawCode, highlightedCode } = await processFile(filePath, "tsx")
-
-      // Use "example:" prefix to distinguish from registry files
-      const prefixedKey = `example:${key}`
       return { prefixedKey, rawCode, highlightedCode }
     }
   )
@@ -333,96 +271,16 @@ export function getRegistryHighlightedCode(src: string): string {
 `
 }
 
-/**
- * Generate static registry index file for zero-layout-shift component previews
- */
-async function generateStaticIndexFile(
-  exampleFileMap: Record<string, string>
-): Promise<string> {
-  // Generate imports for all examples
-  const imports: string[] = []
-  const indexEntries: string[] = []
-
-  // Group examples by component to get export names
-  const componentExports: Record<string, string[]> = {}
-
-  for (const [key, filePath] of Object.entries(exampleFileMap)) {
-    const parts = key.split("-")
-    const componentName = parts[0]
-    const exampleName = parts.slice(1).join("-")
-
-    if (!componentExports[componentName]) {
-      componentExports[componentName] = []
-    }
-    componentExports[componentName].push(exampleName)
-
-    // Convert file path to import path and generate import name
-    const importPath = filePath.replace("src/", "@/").replace(".tsx", "")
-    // Handle special case of _demo files
-    const cleanExampleName = exampleName.replace(/^_/, "")
-    const importName = toPascalCase(`${componentName}_${cleanExampleName}`)
-
-    // Read the file to detect export pattern
-    const absolutePath = path.join(CONFIG.ROOT_DIR, filePath)
-    const fileContent = await fs.readFile(absolutePath, "utf-8")
-
-    // Check if it has a default export or named export
-    const hasDefaultExport = /export\s+default\s/.test(fileContent)
-    const namedExportMatch = fileContent.match(
-      /export\s+(?:function|const)\s+(\w+)/
-    )
-
-    if (hasDefaultExport) {
-      // Use default import
-      imports.push(`import ${importName} from "${importPath}"`)
-    } else if (namedExportMatch) {
-      // Use named import
-      const exportedName = namedExportMatch[1]
-      imports.push(
-        `import { ${exportedName} as ${importName} } from "${importPath}"`
-      )
-    } else {
-      // Fallback - try default import
-      imports.push(`import ${importName} from "${importPath}"`)
-    }
-
-    // Add index entry (keep original key format)
-    indexEntries.push(`  "${key}": ${importName},`)
-  }
-
-  return `// Auto-generated static registry index for zero-layout-shift component previews
-// Generated by scripts/build-examples.ts - DO NOT EDIT MANUALLY
-
-${imports.join("\n")}
-
-// Static registry for immediate component rendering (no layout shift)
-export const Index = {
-${indexEntries.join("\n")}
-} as const
-
-export type RegistryKey = keyof typeof Index
-`
-}
-
-/**
- * Convert kebab-case to PascalCase for import names
- */
-function toPascalCase(str: string): string {
-  return str
-    .split(/[-_]/)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join("")
-}
+// Static registry index generation moved to registry package
 
 async function buildExamples() {
-  // Discover all examples and registry files
-  const exampleFileMap = await discoverExamples()
+  // Examples are now handled by the registry package
+  // Only process registry files for code extraction
+  const exampleFileMap: Record<string, string> = {} // Empty since examples moved to registry
   const registryFileMap = await discoverRegistryFiles()
 
   console.log(
-    `🔨 Building ${Object.keys(registryFileMap).length} registry files and ${
-      Object.keys(exampleFileMap).length
-    } examples...`
+    `🔨 Building ${Object.keys(registryFileMap).length} registry files (examples are handled by registry package)...`
   )
 
   // Initialize combined maps
@@ -436,8 +294,7 @@ async function buildExamples() {
     combinedHighlightedMap
   )
 
-  // Process examples after registry
-  await processExamples(exampleFileMap, combinedCodeMap, combinedHighlightedMap)
+  // Examples are now processed by the registry package (skip processing here)
 
   // Generate file contents
   const { codeMapFile, highlightedMapFile } = generateCombinedMapFiles(
@@ -446,49 +303,19 @@ async function buildExamples() {
   )
   const codeExtractorFile = generateCodeExtractorFile()
 
-  // Generate the dynamic import map file (unchanged)
-  const importMapFile = `// This file is auto-generated by scripts/build-examples.ts
-// Do not edit this file directly - edit the example files instead
+  // Dynamic imports are now handled by the registry package
+  const importMapFile = `// Examples are now handled by the registry package
+// Dynamic imports are generated there, not here
 
 import type { ComponentType } from "react"
 
+// Empty maps since examples moved to registry package
 export const dynamicImportMap: Record<
   string,
   () => Promise<Record<string, ComponentType>>
-> = {
-${Object.entries(exampleFileMap)
-  .map(([key, filePath]) => {
-    // Convert relative path to module import path
-    const importPath = filePath.replace("src/", "@/").replace(".tsx", "")
-    return `  "${key}": () => import("${importPath}"),`
-  })
-  .join("\n")}
-}
+> = {}
 
-// Generate component examples map from discovered files
-export const componentExamplesMap: Record<string, string[]> = {
-${(() => {
-  const componentMap: Record<string, string[]> = {}
-
-  // Group examples by component
-  for (const key of Object.keys(exampleFileMap)) {
-    const parts = key.split("-")
-    const componentName = parts[0]
-    const exampleName = parts.slice(1).join("-") // Handle multi-part example names like "as-element"
-    if (!componentMap[componentName]) {
-      componentMap[componentName] = []
-    }
-    componentMap[componentName].push(exampleName)
-  }
-
-  return Object.entries(componentMap)
-    .map(
-      ([component, examples]) =>
-        `  "${component}": ${JSON.stringify(examples)},`
-    )
-    .join("\n")
-})()}
-}
+export const componentExamplesMap: Record<string, string[]> = {}
 `
 
   // Write the generated files
@@ -508,13 +335,7 @@ ${(() => {
   await fs.writeFile(CONFIG.CODE_EXTRACTOR_FILE, codeExtractorFile, "utf-8")
   await fs.writeFile(CONFIG.DYNAMIC_IMPORTS_FILE, importMapFile, "utf-8")
 
-  // Generate the static registry index
-  const staticIndexFile = await generateStaticIndexFile(exampleFileMap)
-  await fs.writeFile(
-    path.join(CONFIG.ROOT_DIR, "src/registry/__index__.tsx"),
-    staticIndexFile,
-    "utf-8"
-  )
+  // Static registry index is now generated by the registry package itself
 
   console.log(
     `✅ Generated ${Object.keys(combinedCodeMap).length} code entries`

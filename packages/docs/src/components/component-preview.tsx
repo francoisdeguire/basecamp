@@ -3,7 +3,7 @@
 import React from "react"
 import { ComponentSource } from "@/components/component-source"
 import { ComponentPreviewTabs } from "@/components/component-preview-tabs"
-import { Index } from "@/registry/__index__"
+import { Index } from "@basecamp/registry/__index__"
 
 export function ComponentPreview({
   component,

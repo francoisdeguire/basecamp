@@ -5,6 +5,7 @@
     "paths": {
       "@/*": ["./*"],
       "@/public/*": ["../public/*"],
+      "@/examples/*": ["../registry/src/examples/*"],
       "@basecamp/registry": ["../registry/src"],
       "@basecamp/registry/*": ["../registry/src/*"]
     },

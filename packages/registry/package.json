@@ -10,16 +10,19 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
-    "./theme": "./src/theme.css"
+    "./__index__": "./src/examples/__index__.tsx",
+    "./theme": "./src/theme/theme.css"
   },
   "files": [
     "dist",
-    "src/theme.css",
+    "src/examples/__index__.tsx",
+    "src/theme/theme.css",
     "README.md"
   ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build:index": "tsx build/build-index.ts",
+    "build": "npm run build:index && tsup",
+    "dev": "npm run build:index && tsup --watch",
     "lint": "eslint src --ext .ts,.tsx",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf dist"
@@ -39,6 +42,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   },
   "keywords": [

@@ -1,4 +1,4 @@
-import { Button } from "@/components/registry-client"
+import { Button } from "@basecamp/registry"
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react"
 
 export function ButtonWithIcon() {

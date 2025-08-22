@@ -5,7 +5,7 @@ import {
   Tab as AriaTab,
   TabPanel as AriaTabPanel,
 } from "react-aria-components"
-import { cn } from "../utils"
+import { cn } from "../../lib/utils"
 
 import type { TabsProps, TabListProps, TabProps, TabPanelProps } from "./types"
 import {

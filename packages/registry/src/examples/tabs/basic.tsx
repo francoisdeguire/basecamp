@@ -1,4 +1,4 @@
-import { Tabs, TabList, Tab, TabPanel } from "@/components/registry-client"
+import { Tabs, TabList, Tab, TabPanel } from "@basecamp/registry"
 
 export default function BasicExample() {
   return (

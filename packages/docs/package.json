@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "npm run build:content && next dev",
     "dev:turbo": "npm run build:content && next dev --turbopack",
-    "build": "npm run build:content && next build",
+    "build": "npm run build:registry && npm run build:content && next build",
+    "build:registry": "cd ../registry && npm run build:index",
     "build:content": "npm run build:tools && node build/dist/build-content.js",
     "build:tools": "cd build && tsup",
     "start": "next start",

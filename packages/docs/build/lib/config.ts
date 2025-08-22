@@ -7,6 +7,7 @@ import path from "path"
 export const CONFIG = {
   // Base directories
   ROOT_DIR: process.cwd(),
+  REGISTRY_ROOT_DIR: path.join(process.cwd(), "../registry"),
   SRC_DIR: path.join(process.cwd(), "src"),
 
   // Content directories
@@ -17,8 +18,8 @@ export const CONFIG = {
   PRIMITIVES_DOCS_DIR: path.join(process.cwd(), "src/content/docs/primitives"),
 
   // Registry directories
-  REGISTRY_DIR: path.join(process.cwd(), "src/registry"),
-  EXAMPLES_DIR: path.join(process.cwd(), "src/registry/examples"),
+  REGISTRY_DIR: path.join(process.cwd(), "../registry/src"),
+  EXAMPLES_DIR: path.join(process.cwd(), "../registry/src/examples"),
 
   // Generated files directory
   GENERATED_DIR: path.join(process.cwd(), "src/generated"),

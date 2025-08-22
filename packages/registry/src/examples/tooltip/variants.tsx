@@ -1,5 +1,5 @@
-import { Button } from "@/components/registry-client"
-import { Tooltip, TooltipTrigger } from "@/components/registry-client"
+import { Button } from "@basecamp/registry"
+import { Tooltip, TooltipTrigger } from "@basecamp/registry"
 
 export default function VariantsExample() {
   return (

@@ -1,4 +1,4 @@
-import { Box } from "@/components/registry-client"
+import { Box } from "@basecamp/registry"
 
 export default function BasicExample() {
   return (

@@ -5,7 +5,7 @@ import {
   TooltipTrigger as AriaTooltipTrigger,
   OverlayArrow,
 } from "react-aria-components"
-import { cn } from "../utils"
+import { cn } from "../../lib/utils"
 import { tooltipContentVariants, tooltipArrowVariants } from "./variants"
 import {
   type TooltipProps,
