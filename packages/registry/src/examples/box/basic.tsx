@@ -1,6 +1,6 @@
 import { Box } from "@basecamp/registry"
 
-export default function BasicExample() {
+export function BasicExample() {
   return (
     <div className="space-y-4">
       <Box className="p-4 bg-blue-100 rounded">

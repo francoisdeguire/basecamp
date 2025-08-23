@@ -277,7 +277,7 @@ async function generateStaticIndexFile(
     // Convert file path to import path and generate import name
     // Remove 'examples/' prefix since __index__.tsx is now inside examples/
     const relativePath = filePath.replace(/^examples\//, "")
-    const importPath = `./${relativePath.replace(".tsx", "")}`
+    const importPath = `./${relativePath.replace(".tsx", "")}` // Remove extension for Next.js auto-resolution
     const cleanExampleName = exampleName.replace(/^_/, "")
     const importName = toPascalCase(`${componentName}_${cleanExampleName}`)
 
@@ -313,9 +313,7 @@ ${imports.join("\n")}
 // Static registry for immediate component rendering (no layout shift)
 export const Index = {
 ${indexEntries.join("\n")}
-} as const
-
-export type RegistryKey = keyof typeof Index
+}
 `
 }
 

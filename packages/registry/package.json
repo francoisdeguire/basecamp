@@ -33,17 +33,17 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
-    "react-aria-components": "^1.10.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "react-aria-components": "^1.11.0",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "tsup": "^8.3.5",
-    "tsx": "^4.19.2",
-    "typescript": "^5"
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
+    "tsup": "^8.5.0",
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
   },
   "keywords": [
     "react",

@@ -1,6 +1,6 @@
 import { Box } from "@basecamp/registry"
 
-export default function AsElementExample() {
+export function AsElementExample() {
   return (
     <div className="space-y-4">
       <Box as="section" className="p-4 bg-gray-100">
