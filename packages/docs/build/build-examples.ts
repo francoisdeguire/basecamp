@@ -90,6 +90,41 @@ async function processFile(
   }
 }
 
+// Discover examples from registry package
+async function discoverExamplesFromRegistry(): Promise<Record<string, string>> {
+  const exampleFileMap: Record<string, string> = {}
+
+  try {
+    const examplesDir = path.join(CONFIG.REGISTRY_DIR, "examples")
+    const components = await fs.readdir(examplesDir, { withFileTypes: true })
+
+    for (const component of components) {
+      if (!component.isDirectory()) continue
+
+      const componentPath = path.join(examplesDir, component.name)
+      const examples = await fs.readdir(componentPath, { withFileTypes: true })
+
+      for (const example of examples) {
+        if (!example.isFile() || !example.name.endsWith(".tsx")) continue
+
+        const exampleName = example.name.replace(".tsx", "")
+        const key = `${component.name}-${exampleName}`
+        const relativePath = path.relative(
+          CONFIG.ROOT_DIR,
+          path.join(componentPath, example.name)
+        )
+
+        exampleFileMap[key] = relativePath
+      }
+    }
+  } catch (error) {
+    console.error("❌ Failed to discover examples:", error)
+    throw error
+  }
+
+  return exampleFileMap
+}
+
 // Dynamic registry UI file discovery
 async function discoverRegistryFiles(): Promise<Record<string, string>> {
   const registryFileMap: Record<string, string> = {}
@@ -153,6 +188,34 @@ async function discoverRegistryFiles(): Promise<Record<string, string>> {
   }
 
   return registryFileMap
+}
+
+/**
+ * Process all example files and add to combined maps (with parallel processing)
+ */
+async function processExamples(
+  exampleFileMap: Record<string, string>,
+  combinedCodeMap: Record<string, string>,
+  combinedHighlightedMap: Record<string, string>
+) {
+  // Process files in parallel for better performance
+  const processingPromises = Object.entries(exampleFileMap).map(
+    async ([key, filePath]) => {
+      const { rawCode, highlightedCode } = await processFile(filePath, "tsx")
+
+      // Use "example:" prefix to distinguish from registry files
+      const prefixedKey = `example:${key}`
+      return { prefixedKey, rawCode, highlightedCode }
+    }
+  )
+
+  const results = await Promise.all(processingPromises)
+
+  // Add results to combined maps
+  for (const { prefixedKey, rawCode, highlightedCode } of results) {
+    combinedCodeMap[prefixedKey] = rawCode
+    combinedHighlightedMap[prefixedKey] = highlightedCode
+  }
 }
 
 /**
@@ -274,13 +337,12 @@ export function getRegistryHighlightedCode(src: string): string {
 // Static registry index generation moved to registry package
 
 async function buildExamples() {
-  // Examples are now handled by the registry package
-  // Only process registry files for code extraction
-  const exampleFileMap: Record<string, string> = {} // Empty since examples moved to registry
+  // Discover both examples and registry files
+  const exampleFileMap = await discoverExamplesFromRegistry()
   const registryFileMap = await discoverRegistryFiles()
 
   console.log(
-    `🔨 Building ${Object.keys(registryFileMap).length} registry files (examples are handled by registry package)...`
+    `🔨 Building ${Object.keys(exampleFileMap).length} examples and ${Object.keys(registryFileMap).length} registry files...`
   )
 
   // Initialize combined maps
@@ -294,7 +356,8 @@ async function buildExamples() {
     combinedHighlightedMap
   )
 
-  // Examples are now processed by the registry package (skip processing here)
+  // Process examples for code display in docs
+  await processExamples(exampleFileMap, combinedCodeMap, combinedHighlightedMap)
 
   // Generate file contents
   const { codeMapFile, highlightedMapFile } = generateCombinedMapFiles(
